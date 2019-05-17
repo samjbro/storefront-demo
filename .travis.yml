@@ -1,0 +1,21 @@
+sudo: required
+language: node_js
+node_js:
+  - "9"
+services:
+  - docker
+
+before_install:
+  - ./scripts/build_test_images.sh
+
+script:
+  - ./scripts/run_tests.sh
+
+after_success:
+  - ./scripts/push_to_docker.sh
+
+deploy:
+  on:
+    branch: master
+  provider: script
+  script: bash ./scripts/push_to_heroku.sh

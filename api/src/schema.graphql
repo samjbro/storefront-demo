@@ -1,0 +1,34 @@
+type Query {
+  me: Customer!
+}
+
+type Mutation {
+  login (data: LoginCustomerInput!): AuthPayload!
+  register (data: RegisterCustomerInput!): AuthPayload!
+}
+
+type Customer {
+  customer_id: ID!
+  name: String!
+  email: String!
+  password: String!
+  day_phone: String
+  eve_phone: String
+  mob_phone: String
+}
+
+type AuthPayload {
+  token: String!
+  customer: Customer!
+}
+
+input LoginCustomerInput {
+  email: String!
+  password: String!
+}
+
+input RegisterCustomerInput {
+  name: String!
+  email: String!
+  password: String!
+}
