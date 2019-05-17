@@ -12,8 +12,3 @@ docker tag "$DOCKER_ID"/turing-api registry.heroku.com/turing-samjbro-api/web
 docker push registry.heroku.com/turing-samjbro-proxy/web
 docker push registry.heroku.com/turing-samjbro-client/web
 docker push registry.heroku.com/turing-samjbro-api/web
-
-# Release container within Heroku
-heroku container:release web --app turing-samjbro-proxy
-heroku container:release web --app turing-samjbro-client
-heroku container:release web --app turing-samjbro-api

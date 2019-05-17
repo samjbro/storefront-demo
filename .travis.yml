@@ -19,3 +19,5 @@ deploy:
     branch: master
   provider: script
   script: bash ./scripts/push_to_heroku.sh
+after_deploy:
+  - ./scripts/release_heroku_containers.sh
