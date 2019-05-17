@@ -1,23 +1,21 @@
 sudo: required
 language: node_js
 node_js:
-  - "9"
+- '9'
 services:
-  - docker
-
+- docker
 before_install:
-  - ./scripts/build_test_images.sh
-
+- "./scripts/build_test_images.sh"
 script:
-  - ./scripts/run_tests.sh
-
+- "./scripts/run_tests.sh"
 after_success:
-  - ./scripts/push_to_docker.sh
-
+- "./scripts/push_to_docker.sh"
 deploy:
   on:
     branch: master
   provider: script
   script: bash ./scripts/push_to_heroku.sh
+  api_key:
+    secure: SgeCvb+ryycVv4UHEkdHsAhZkk10AddY8gW5b6eyulqlhWbTNaZuXpHhFrAxBM/7ogG/eKJu2FyyqTuf3ZvCIfeLdX5BqMFzEl9wzoC9L38ht32S57Uz8wmD82Rw3kRWxnn5SlUiIdUvHcfAi16o2F35SAOxYpyOjie0aqJPkUm1+ImBJ3dSFe6ogQytCII2JkB0hwG5v5ILcn1msmIQfM+QbY2XnJUT1px/1PpIAGMw9zy2P3LHXJKQrr7gHsK7hkHepB24+CRyr97MR94qIQnNDanx/Yn2aGHIrukJpneyqhIpf3CRakC/8ef0SdUYvKRoV+Eqv11yjD3AYdvzXGBXSJtRXHydcmUnvoPHsZJeJgzD/g86ESXkehjQQiFtlepHTMeWbXDRA6t3J+H7KIh+xg7sLwbyhl5IcLtGprLM9HWEyk0Y68FhB2z2P6kr4VRHBWJW37xKJraRpZkpHKG90+doZ+yo3pMeRrXlqhSquEjppYeaSKfTn7ll7LbdBrMrwkYuvmAdhvncimQUM+zEdbmqqI1Puxq/Y9tS65bgezw4NzNnFgT4OI6D7J7HBUgceL5m21DTM0sJnsqfbIZEZUKec+l75B6nG3mGTAfBpVtqn0VBWAbY3nzUB+QOevF7VLHKG7SeJomb/FHOIwRNF2T4NRmOyRlnJy4YoS8=
 after_deploy:
-  - ./scripts/release_heroku_containers.sh
+- "./scripts/release_heroku_containers.sh"
