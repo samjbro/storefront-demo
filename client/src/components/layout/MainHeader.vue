@@ -18,12 +18,12 @@
       <a @click.prevent="showOverlay('contact')">Help & Contact</a>
     </div>
     <div class="main-header__currency">
-      <img src="~img/gbr.png" alt="GBP">
+      <img src="~img/gbr.svg" alt="GBP">
       £ GBP
     </div>
     <div class="main-header__checkout">
       <div class="main-header__bag">
-        <img src="~img/icons-bag.png" alt="Bag">
+        <img src="~img/icons-bag.svg" alt="Bag">
         <div class="main-header__bag-number">6</div>
       </div>
       <div>Your bag: £3.99</div>

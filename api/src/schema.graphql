@@ -1,5 +1,6 @@
 type Query {
   me: Customer!
+  products(page: Int, limit: Int): [Product!]!
 }
 
 type Mutation {
@@ -15,6 +16,13 @@ type Customer {
   day_phone: String
   eve_phone: String
   mob_phone: String
+}
+
+type Product {
+  product_id: ID!
+  name: String!
+  price: String!
+  thumbnail: String!
 }
 
 type AuthPayload {

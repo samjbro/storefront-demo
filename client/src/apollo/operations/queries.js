@@ -29,4 +29,15 @@ const GET_OVERLAY = gql`
   }
 `
 
-export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY }
+const GET_PRODUCTS = gql`
+  query getProducts($page: Int, $limit: Int) {
+    products(page: $page, limit: $limit) {
+      product_id
+      name
+      price
+      thumbnail
+    }
+  }
+`
+
+export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS }

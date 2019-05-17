@@ -13,7 +13,6 @@ export default {
         customer
       }
     } catch(err) {
-      console.log(err)
       throw new Error(errorMessage)
     }
   },

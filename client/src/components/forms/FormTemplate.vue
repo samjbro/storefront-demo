@@ -72,7 +72,7 @@ export default {
       padding: 1.5rem 2rem;
       min-width: 30rem;
       border-radius: .4rem;
-      border: 1px solid $color-grey;
+      border: 1px solid $color-gray-light;
       font-size: 1.4rem;
     }
 

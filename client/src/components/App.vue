@@ -38,10 +38,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~#/abstracts/variables";
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   position: relative;
+  background-color: $color-off-white;
 }
 </style>

@@ -5,8 +5,6 @@ import { importSchema } from 'graphql-import'
 
 import resolvers from './resolvers'
 
-console.log({envVars:process.env})
-
 const resolve = file => path.resolve(__dirname, '..', file)
 
 const app = express()
