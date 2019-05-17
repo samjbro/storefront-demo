@@ -23,7 +23,7 @@
   },
   "scripts": {
     "dev": "env-cmd ./config/dev.env nodemon src/index.js --exec babel-node",
-    "start": "npm run build && node dist/index.js",
+    "start": "env-cmd ./config/prod.env npm run build && node dist/index.js",
     "build": "babel src -d dist"
   }
 }
