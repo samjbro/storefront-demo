@@ -2,4 +2,4 @@
 
 echo "building test images"
 
-docker build -t "$DOCKER_ID"/turing-api-test ./api/docker
+docker build -t "$DOCKER_ID"/turing-api-test ./api
