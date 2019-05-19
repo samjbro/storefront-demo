@@ -1,7 +1,7 @@
 <template>
   <div class="product-display">
-    <ProductFilters />
-    <ProductCards />
+    <ProductFilters class="product-display__filters" />
+    <ProductCards class="product-display__cards" />
   </div>
 </template>
 
@@ -21,6 +21,10 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
+
+  &__cards {
+    flex: 4;
+  }
 }
 </style>
 

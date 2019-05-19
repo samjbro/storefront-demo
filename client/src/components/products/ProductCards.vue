@@ -1,64 +1,29 @@
 <template>
   <div class="product-cards">
-    <div class="product-cards__pagination">
-      <div 
-        class="product-cards__arrow product-cards__arrow--back" 
-        :class="{'product-cards__arrow--hidden': page < 2}"
-        @click="goToPage(page - 1)">
-        <img src="~img/arrow-left.svg" alt="back">
-        <span>Back</span>
-      </div>
-      <div class="product-cards__pagenums">
-        <div
-          :key='1'
-          class="product-cards__pagenum"
-          :class="{'product-cards__pagenum--current': page === 1 }"
-          @click="goToPage(1)"
-        >1</div>
-        <div class="product-cards__pagenum" v-if="page > 3">
-          ...
-        </div>        
-        <div 
-          v-for="(num, index) in pageCountSelection" 
-          :key="num"
-          class="product-cards__pagenum"
-          :class="{'product-cards__pagenum--current': page === num }"
-          @click="goToPage(num)"
-        >
-          {{ num }}
-        </div>
-        <div class="product-cards__pagenum" v-if="page < pageCount - 3">
-          ...
-        </div>        
-        <div
-          :key='pageCount'
-          class="product-cards__pagenum"
-          :class="{'product-cards__pagenum--current': page === pageCount }"
-          @click="goToPage(pageCount)"
-        >{{ pageCount }}</div>
-      </div>
-      <div
-       class="product-cards__arrow product-cards__arrow--forward"
-        @click="goToPage(page + 1)"
-        :class="{'product-cards__arrow--hidden': page > pageCount - 1}"
-      >
-        <span>Forward</span>
-        <img src="~img/arrow-right.svg" alt="forward">
-      </div>
-    </div>
-    <div class="product-cards__page-wrapper">
+    <ProductPaginator @goTo="getPage" />
+    <div class="product-cards__display">
       <transition
-        :name="prevPage < page
-              ? 'product-cards__page--transitioning-left'
-              : 'product-cards__page--transitioning-right'"
+        :name="prevPage < currentPage
+          ? 'product-cards__page--transitioning-left'
+          : 'product-cards__page--transitioning-right'"
       >
-      <div class="product-cards__page" :key='page'>
-        <ProductCard
-          v-for="product in productList" 
-          :key="product.product_id" 
-          :product="product" 
-        />
-      </div>
+        <div class="product-cards__page" :key="currentPage">
+          <template v-if="productsLoading">
+            <ProductCard
+              v-show="productsLoading"
+              v-for="(product, i) in defaultList"
+              :key="i"
+              :product="product"
+            />
+          </template>
+          <template v-else>
+            <ProductCard
+              v-for="product in products.product_list"
+              :key="product.product_id"
+              :product="product"
+            />
+          </template>
+        </div>
       </transition>
     </div>
   </div>
@@ -66,49 +31,31 @@
 
 <script>
 import { GET_PRODUCTS } from '@/apollo/operations'
+import ProductPaginator from './ProductPaginator'
 import ProductCard from './ProductCard'
 export default {
-  components: { ProductCard },
+  components: { ProductPaginator, ProductCard },
   data () {
     return {
-      page: 1,
+      currentPage: 1,
       prevPage: 1,
       limit: 6,
       productsLoading: 0
     }
   },
   methods: {
-    goToPage (page) {
-      this.prevPage = this.page
-      if (page > 0 && page < (this.pageCount + 1)) {
-        this.page = page
-      }
-    } 
+    getPage (page) {
+      this.prevPage = this.currentPage
+      this.currentPage = page
+      // console.log('going to page ' + page)
+    }
   },
   computed: {
-    pageCount () {
-      if (!this.products) return 1
-      return Math.ceil(this.products.count / this.limit)
-    },
-    pageCountSelection () {
-      let middleNum = this.page
-      let start, end = false
-      if (middleNum < 4) {
-        start = true
-        middleNum += (4 - middleNum)
-      } else if (middleNum > this.pageCount - 4) {
-        end = true
-        middleNum -= (3 - (this.pageCount - middleNum))
-      }
+    productList () {
 
-      const selection = [
-        middleNum -1,
-        middleNum,
-        middleNum + 1
-      ]
-      if (start) selection.unshift(middleNum - 2)
-      if (end) selection.push(middleNum + 2)
-      return selection
+      return this.productsLoading
+        ? this.defaultList
+        : this.products.product_list
     },
     defaultList () {
       const list = []
@@ -123,11 +70,6 @@ export default {
       }
       return list
     },
-    productList () {
-      return this.productsLoading
-        ? this.defaultList
-        : this.products.product_list
-    }
   },
   apollo: {
     products () {
@@ -136,7 +78,7 @@ export default {
         loadingKey: 'productsLoading',
         variables () {
           return {
-            page: this.page,
+            page: this.currentPage,
             limit: this.limit
           }
         }
@@ -147,87 +89,27 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~#/abstracts/variables";
 .product-cards {
-  flex: 4;
-  min-height: 100%;
+  // background: red;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  &__pagination {
-    margin-bottom: 1.5rem;
-    display: flex;
-    height: 2rem;
-
-    & > * {
-      &:not(:last-child) {
-        margin-right: 1rem;
-      }
-    }
-  }
-
-  &__arrow {
-    transition: transform .2s;
-    cursor: pointer;
-    display: flex;
-    align-items: center;  
-    flex: 1;
-    & > * {
-      &:not(:last-child) {
-        margin-right: .5rem;
-      }
-    }
-
-    &--hidden {
-      visibility: hidden;
-    }
-  }
-  &__pagenums {
-    display: flex;
-  }
-  &__pagenum {
-    font-weight: 600;
-    color: #000;
-    height: 2rem;
-    width: 2rem;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 1s;
-    cursor: pointer;
-
-    &:not(:last-child) {
-      margin-right: 1rem;
-    }
-
-    &:hover {
-      transform: scale(1.2);
-    }
-
-    &--current {
-      color: $color-white;
-      background: $color-red;
-      transform: scale(1.2);
-    }
-  }
-  &__page-wrapper {
+  &__display {
+  // background: blue;
     position: relative;
-    width: 100%;
-    display: flex;
-    padding-bottom: 2rem;
+    height: 100%;
   }
-
   &__page {
+    padding: 1rem 0 2rem 0;
+    // background: green;
+    position: absolute;
     width: 100%;
     display: grid;
     grid-gap: 2rem;
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     justify-content: center;
+    // overflow: auto;
 
     &--transitioning {
-
       &-left {
         &-enter-active {
           transform: translateX(105%);
@@ -253,9 +135,15 @@ export default {
         &-leave-active,
         &-enter-to,
         &-leave-to {
-          position: absolute;
-          top: 0;
-          height: 100%;
+          // background: yellow;
+          // position: relative;
+
+          // & > * {
+            // position: absolute;
+            // top: 0;
+            // height: 100%;
+          // }
+          // height: 100%;
         }
         &-enter-active,
         &-leave-active {
@@ -272,9 +160,5 @@ export default {
       }
     }
   }
-  &__item {
-
-  }
-
 }
 </style>
