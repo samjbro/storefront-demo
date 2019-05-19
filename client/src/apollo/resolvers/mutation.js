@@ -45,9 +45,9 @@ export default {
   setSearchTerms: (_, { data: { page, limit, query_string }}, { cache }) => {
     const { searchTerms } = cache.readQuery({ query: GET_SEARCH_TERMS})
     const newTerms = searchTerms
-    newTerms.page = page || newTerms.page
-    newTerms.limit = limit || newTerms.limit
-    newTerms.query_string = query_string
+    if (page) newTerms.page = page
+    if (limit) newTerms.limit = limit
+    if (typeof query_string === 'string') newTerms.query_string = query_string
     cache.writeData({
       data: {
         searchTerms: newTerms

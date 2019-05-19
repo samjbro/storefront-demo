@@ -45,7 +45,6 @@ export default {
     return {
       currentPage: 1,
       prevPage: 1,
-      limit: 6,
       productsLoading: 0
     }
   },
@@ -63,7 +62,7 @@ export default {
     },
     defaultList () {
       const list = []
-      for (let i = 0; i < this.limit; i++) {
+      for (let i = 0; i < this.searchTerms.limit; i++) {
         list.push({
           product_id: i,
           name: 'Loading',
