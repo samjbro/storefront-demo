@@ -158,6 +158,8 @@ export default {
   &__pagination {
     margin-bottom: 1.5rem;
     display: flex;
+    height: 2rem;
+
     & > * {
       &:not(:last-child) {
         margin-right: 1rem;
@@ -175,9 +177,6 @@ export default {
       &:not(:last-child) {
         margin-right: .5rem;
       }
-    }
-    &:hover {
-      transform: scale(1.2);
     }
 
     &--hidden {
