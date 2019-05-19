@@ -33,16 +33,12 @@
 <script>
 export default {
   props: {
-    count: {
-      type: Number,
-    },
-    limit: {
-      default: () => 6
-    }
+    count: Number,
+    currentPage: Number,
+    limit: Number
   },
   data () {
     return {
-      currentPage: 1,
       maxButtons: 7
     }
   },
@@ -50,12 +46,9 @@ export default {
     goTo(page) {
       if (page < 1 || page > this.pageCount) return
       this.$emit('goTo', page)
-      this.currentPage = page
     },
     formatNumText(num, i) {
-      console.log({numberOfButtons: this.numberOfButtons})
       if(this.numberOfButtons < this.limit) return num
-      console.log({num, i})
       if (i+1 === 2 && num !== 2) return '...'
       if ((i+1 === this.numberOfButtons -1) && num !== this.pageCount -1) return '...'
       return num

@@ -9,7 +9,7 @@ export default {
   searchTerms: {
     __typename: 'SearchTerms',
     page: 1,
-    limit: 6,
+    limit: 4,
     query_string: ''
   }
 }

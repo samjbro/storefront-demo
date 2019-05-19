@@ -1,6 +1,6 @@
 <template>
   <div class="product-cards">
-    <ProductPaginator @goTo="getPage" :count="products ? parseInt(products.count) : 6" />
+    <ProductPaginator @goTo="getPage" :count="products ? parseInt(products.count) : 6" :currentPage="currentPage" :limit="searchTerms.limit" />
     <div class="product-cards__display" :class="{'product-cards__display--empty': !productsLoading && products.count === '0'}">
       <div 
         v-if="!productsLoading && products.count === '0'"
@@ -78,7 +78,10 @@ export default {
   apollo: {
     searchTerms () {
       return {
-        query: GET_SEARCH_TERMS
+        query: GET_SEARCH_TERMS,
+        result () {
+          this.currentPage = 1
+        }
       }
     },
     products () {

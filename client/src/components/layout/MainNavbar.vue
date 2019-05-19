@@ -47,6 +47,7 @@ export default {
         mutation: SET_SEARCH_TERMS,
         variables: {
           data: {
+            page: 1,
             query_string: this.search
           }
         }
