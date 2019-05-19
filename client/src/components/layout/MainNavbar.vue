@@ -13,7 +13,7 @@
     <div class="main-navbar__search">
       <img src="~img/icons-search-white.png" class="main-navbar__search-icon main-navbar__search-icon--left">
       <input
-        @input="submitSearch(search)"
+        @input="debouncedInput"
         type="text"
         placeholder="search anything"
         v-model="search" 
@@ -28,11 +28,13 @@
 </template>
 
 <script>
+import { debounce } from '@/utils'
 import { GET_PRODUCTS, SET_SEARCH_TERMS } from '@/apollo/operations'
 export default {
   data () {
     return {
-      search: ''
+      search: '',
+      debouncedInput: debounce(this.submitSearch, 500)
     }
   },
   methods: {

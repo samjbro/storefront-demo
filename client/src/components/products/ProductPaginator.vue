@@ -53,6 +53,9 @@ export default {
       this.currentPage = page
     },
     formatNumText(num, i) {
+      console.log({numberOfButtons: this.numberOfButtons})
+      if(this.numberOfButtons < this.limit) return num
+      console.log({num, i})
       if (i+1 === 2 && num !== 2) return '...'
       if ((i+1 === this.numberOfButtons -1) && num !== this.pageCount -1) return '...'
       return num
@@ -64,7 +67,7 @@ export default {
     },
     numberOfButtons () {
       return (this.count / this.limit) < this.maxButtons 
-        ? Math.floor(this.count / this.limit)
+        ? Math.ceil(this.count / this.limit)
         : this.maxButtons
     },
     middleButton () {
