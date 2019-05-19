@@ -18,6 +18,9 @@ export default {
 .product-display {
   display: flex;
   padding: 1.5rem 3rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
 }
 </style>
 

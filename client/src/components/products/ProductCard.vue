@@ -1,16 +1,26 @@
 <template>
+  <transition name="product-card--transitioning">
   <div class="product-card">
-      <img 
-        class="product-card__thumb"
+    <div class="product-card__thumb" :class="{'product-card__thumb--loading': product.loading}">
+      <fa-icon
+        v-if="product.loading"
+        class="product-card__spinner"
+        :icon="['fas', 'spinner']" 
+        spin
+      />
+      <img
+        v-else
         :src="`https://backendapi.turing.com/images/products/${product.thumbnail}`"
         :alt="product.thumbnail">
-      <div class="product-card__name">
-        {{ product.name }}
-      </div>
-      <div class="product-card__price">
-        £{{ product.price }}
-      </div>
+    </div>
+    <div class="product-card__name">
+      {{ product.name }}
+    </div>
+    <div class="product-card__price">
+      {{ formattedPrice }}
+    </div>
   </div>
+  </transition>
 </template>
 
 <script>
@@ -20,6 +30,12 @@ export default {
       type: Object,
       required: true
     }
+  },
+  computed: {
+    formattedPrice () {
+      if (this.product.loading) return this.product.price
+      return '£' + this.product.price
+    }
   }
 }
 </script>
@@ -27,27 +43,51 @@ export default {
 <style lang="scss">
 @import "~#/abstracts/variables";
 .product-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    background-color: $color-white;
-    overflow: hidden;
-    box-shadow: 0 2px 4px 0 $color-gray-med; 
-    font-weight: 600;
-    
-    &__thumb {
-      width: 18rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  background-color: $color-white;
+  overflow: hidden;
+  box-shadow: 0 .2rem .4rem 0 $color-gray-med; 
+  font-weight: 600;
+  min-height: 30rem;
+  cursor: pointer;
+  transition: all .3s;
+
+  &:hover {
+    transform: translateY(-.7rem);
+    box-shadow: 0 .4rem .8rem 0 $color-gray-med; 
+  }
+  
+  &__thumb {
+    width: 18rem;
+    height: 17rem;
+    margin-bottom: 2rem;
+
+    &--loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    img {
+      width: 100%;
       height: auto;
-      margin-bottom: 2rem;
     }
+  }
 
-    &__name {
-      margin-bottom: 1rem;
-    }
+  &__name {
+    margin-bottom: 1rem;
+  }
 
-    &__price {
-      color: $color-red;
-    }
+  &__price {
+    color: $color-red;
+  }
+
+  &__spinner {
+    font-size: 4rem;
+  }
+
 }
 </style>

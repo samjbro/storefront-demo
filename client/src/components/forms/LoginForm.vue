@@ -1,5 +1,5 @@
 <template>
-  <FormTemplate @onSubmit="login">
+  <FormTemplate @onSubmit="login" ref="form">
     <template v-slot:header>Sign In</template>
     <template v-slot:fields>
       <input type="email" v-model="email" placeholder="Email" autofocus required>
@@ -58,6 +58,7 @@ export default {
           mutation: CLOSE_OVERLAY
         })
       } catch (e) {
+        this.$refs.form.fail(e.message.replace('GraphQL error: ', ''))
         console.error(e)
       }
     }

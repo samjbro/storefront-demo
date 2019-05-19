@@ -32,10 +32,13 @@ const GET_OVERLAY = gql`
 const GET_PRODUCTS = gql`
   query getProducts($page: Int, $limit: Int) {
     products(page: $page, limit: $limit) {
-      product_id
-      name
-      price
-      thumbnail
+      count
+      product_list {
+        product_id
+        name
+        price
+        thumbnail
+      }
     }
   }
 `

@@ -42,8 +42,9 @@ export default {
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   position: relative;
   background-color: $color-off-white;
+  overflow: hidden;
 }
 </style>

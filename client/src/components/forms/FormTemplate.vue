@@ -35,7 +35,7 @@ export default {
       this.error = message
       setTimeout(() => {
         this.failed = false
-      }, 5000)
+      }, 1000)
     }
   }
 }

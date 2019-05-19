@@ -15,7 +15,10 @@ export default {
 
 <style lang="scss">
 .main-content {
-  
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 </style>
 

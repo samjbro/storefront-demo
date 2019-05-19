@@ -1,7 +1,7 @@
 <template>
-  <transition name="main-overlay--transition">
+  <transition name="main-overlay--transitioning">
   <div class="main-overlay" v-show="overlay.showing">
-    <transition name="main-overlay__panel--transition">
+    <transition name="main-overlay__panel--transitioning">
     <div 
       class="main-overlay__panel"
       v-show="overlay.showing"
@@ -51,7 +51,7 @@ export default {
 <style lang="scss">
 .main-overlay {
   background-color: rgba(0,0,0, .8);
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -68,7 +68,7 @@ export default {
     flex-direction: column;
     box-shadow: 0 2px 1rem #000;
 
-    &--transition {
+    &--transitioning {
       &-enter-active,
       &-leave-active {
         transition: transform .5s;
@@ -112,7 +112,7 @@ export default {
     }
   }
 
-  &--transition {
+  &--transitioning {
     &-enter-active,
     &-leave-active {
       transition: opacity .5s;

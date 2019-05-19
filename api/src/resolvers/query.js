@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { fakeDelay } from '../utils'
 
 const endpoint = process.env.REST_API_ENDPOINT
 
@@ -16,6 +17,7 @@ export default {
     }
   },
   products: async (parent, { page, limit }, { request }, info) => {
+    await fakeDelay(1000)
     try {
       console.log({page, limit})
       const { data } = await axios.get(`${endpoint}/products`, {
@@ -24,7 +26,10 @@ export default {
         }
       })
       console.log({data})
-      return data.rows
+      return {
+        count: data.count,
+        product_list: data.rows
+      }
     } catch (e) {
       console.log(e)
       throw new Error(e)

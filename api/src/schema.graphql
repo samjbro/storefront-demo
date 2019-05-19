@@ -1,6 +1,6 @@
 type Query {
   me: Customer!
-  products(page: Int, limit: Int): [Product!]!
+  products(page: Int, limit: Int): ProductsPayload!
 }
 
 type Mutation {
@@ -28,6 +28,11 @@ type Product {
 type AuthPayload {
   token: String!
   customer: Customer!
+}
+
+type ProductsPayload {
+  count: String!
+  product_list: [Product!]!
 }
 
 input LoginCustomerInput {
