@@ -12,9 +12,14 @@
     </div>
     <div class="main-navbar__search">
       <img src="~img/icons-search-white.png" class="main-navbar__search-icon main-navbar__search-icon--left">
-      <input type="text" placeholder="search anything" v-model="search" />
+      <input
+        @input="submitSearch(search)"
+        type="text"
+        placeholder="search anything"
+        v-model="search" 
+      />
       <img
-        @click="search = ''" 
+        @click="clear" 
         src="~img/icons-close-small-white.png" 
         class="main-navbar__search-icon main-navbar__search-icon--right"
       >
@@ -23,10 +28,27 @@
 </template>
 
 <script>
+import { GET_PRODUCTS, SET_SEARCH_TERMS } from '@/apollo/operations'
 export default {
   data () {
     return {
       search: ''
+    }
+  },
+  methods: {
+    clear () {
+      this.search = ''
+      this.submitSearch()
+    },
+    async submitSearch () {
+      const { data } = await this.$apollo.mutate({
+        mutation: SET_SEARCH_TERMS,
+        variables: {
+          data: {
+            query_string: this.search
+          }
+        }
+      })
     }
   }
 }

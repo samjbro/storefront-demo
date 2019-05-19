@@ -1,6 +1,6 @@
 <template>
   <transition name="product-card--transitioning">
-  <div class="product-card">
+  <div class="product-card" @click="showProduct">
     <div class="product-card__thumb" :class="{'product-card__thumb--loading': product.loading}">
       <fa-icon
         v-if="product.loading"
@@ -24,11 +24,39 @@
 </template>
 
 <script>
+import { SHOW_OVERLAY, GET_PRODUCT, SET_CURRENT_PRODUCT } from '@/apollo/operations'
 export default {
   props: {
     product: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    async showProduct () {
+      this.$apollo.mutate({
+        mutation: SET_CURRENT_PRODUCT,
+        variables: {
+          product: null
+        }
+      })
+      this.$apollo.mutate({
+        mutation: SHOW_OVERLAY,
+        variables: { view: 'product' }
+      })
+      const { data } = await this.$apollo.query({
+        query: GET_PRODUCT,
+        variables: {
+          id: this.product.product_id
+        }
+      })
+      this.$apollo.mutate({
+        mutation: SET_CURRENT_PRODUCT,
+        variables: {
+          product: data.product
+        }
+      })
+
     }
   },
   computed: {

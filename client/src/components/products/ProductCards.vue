@@ -1,7 +1,12 @@
 <template>
   <div class="product-cards">
-    <ProductPaginator @goTo="getPage" />
-    <div class="product-cards__display">
+    <ProductPaginator @goTo="getPage" :count="products ? parseInt(products.count) : 6" />
+    <div class="product-cards__display" :class="{'product-cards__display--empty': !productsLoading && products.count === '0'}">
+      <div 
+        v-if="!productsLoading && products.count === '0'"
+        class="product-cards__empty"
+      >No Products Found</div>
+      <template v-else>
       <transition
         :name="prevPage < currentPage
           ? 'product-cards__page--transitioning-left'
@@ -25,12 +30,13 @@
           </template>
         </div>
       </transition>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import { GET_PRODUCTS } from '@/apollo/operations'
+import { GET_PRODUCTS, GET_SEARCH_TERMS } from '@/apollo/operations'
 import ProductPaginator from './ProductPaginator'
 import ProductCard from './ProductCard'
 export default {
@@ -47,12 +53,10 @@ export default {
     getPage (page) {
       this.prevPage = this.currentPage
       this.currentPage = page
-      // console.log('going to page ' + page)
     }
   },
   computed: {
     productList () {
-
       return this.productsLoading
         ? this.defaultList
         : this.products.product_list
@@ -72,14 +76,22 @@ export default {
     },
   },
   apollo: {
+    searchTerms () {
+      return {
+        query: GET_SEARCH_TERMS
+      }
+    },
     products () {
       return {
         query: GET_PRODUCTS,
         loadingKey: 'productsLoading',
         variables () {
           return {
-            page: this.currentPage,
-            limit: this.limit
+            data: {
+              page: this.currentPage,
+              limit: this.searchTerms.limit,
+              query_string: this.searchTerms.query_string
+            }
           }
         }
       }
@@ -97,6 +109,17 @@ export default {
   // background: blue;
     position: relative;
     height: 100%;
+    &--empty {
+      overflow: hidden;
+    }
+  }
+  &__empty {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: 600;
   }
   &__page {
     padding: 1rem 0 2rem 0;
@@ -130,21 +153,6 @@ export default {
       }
       &-left,
       &-right {
-        
-        &-enter-active,
-        &-leave-active,
-        &-enter-to,
-        &-leave-to {
-          // background: yellow;
-          // position: relative;
-
-          // & > * {
-            // position: absolute;
-            // top: 0;
-            // height: 100%;
-          // }
-          // height: 100%;
-        }
         &-enter-active,
         &-leave-active {
           transition: all 1s;

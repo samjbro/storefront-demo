@@ -14,6 +14,8 @@
         <RegisterForm v-if="overlay.view === 'register'" />
         <LoginForm v-if="overlay.view === 'login'" />
         <ContactForm v-if="overlay.view === 'contact'" />
+        <ProductView v-if="overlay.view === 'product'" />
+
       </div>
     </div>
     </transition>
@@ -28,9 +30,10 @@ import { GET_OVERLAY, CLOSE_OVERLAY } from '@/apollo/operations'
 import RegisterForm from '@/components/forms/RegisterForm'
 import LoginForm from '@/components/forms/LoginForm'
 import ContactForm from '@/components/forms/ContactForm'
+import ProductView from '@/components/products/ProductView'
 export default {
   mixins: [clickaway],
-  components: { RegisterForm, LoginForm, ContactForm },
+  components: { RegisterForm, LoginForm, ContactForm, ProductView },
   methods: {
     close (){
       this.$apollo.mutate({

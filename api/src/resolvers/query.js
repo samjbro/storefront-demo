@@ -16,22 +16,31 @@ export default {
       throw new Error(e)
     }
   },
-  products: async (parent, { page, limit }, { request }, info) => {
-    await fakeDelay(1000)
+  products: async (parent, { data: { page, limit, query_string } }, { request }, info) => {
+    // await fakeDelay(1000)
     try {
-      console.log({page, limit})
-      const { data } = await axios.get(`${endpoint}/products`, {
+      const url = query_string
+       ? `${endpoint}/products/search`
+       : `${endpoint}/products`
+      const { data } = await axios.get(url, {
         params: {
-          page, limit
+          page, limit, query_string
         }
       })
-      console.log({data})
       return {
         count: data.count,
         product_list: data.rows
       }
     } catch (e) {
-      console.log(e)
+      throw new Error(e)
+    }
+  },
+  product: async (parent, { id }) => {
+    // await fakeDelay(1000)
+    try {
+      const { data } = await axios.get(`${endpoint}/products/${id}`)
+      return data
+    } catch (e) {
       throw new Error(e)
     }
   }

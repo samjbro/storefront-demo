@@ -12,7 +12,7 @@
     <div class="form-template__error">
       {{ error }}
     </div>
-    <button class="form-template__submit" type="submit">
+    <button class="button form-template__submit" type="submit">
       <slot name="submit" />
     </button>
     <div class="form-template__links">
@@ -93,16 +93,8 @@ export default {
   }
 
   &__submit {
-    background-color: $color-red;
-    border-radius: 5rem;
-    color: #fff;
-    padding: 1.5rem;
     width: 75%;
-    margin: 0 auto;
     margin-bottom: 3rem;
-    cursor: pointer;
-    font-size: 1.4rem;
-    font-weight: 600;
   }
   &__error {
     min-height: 2rem;

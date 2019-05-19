@@ -2,7 +2,7 @@
   <div class="product-paginator">
     <div
      class="product-paginator__arrow"
-     :class="{'product-paginator__arrow--hidden': this.currentPage === 1}"
+     :class="{'product-paginator__arrow--hidden': currentPage === 1 || numberOfButtons < 2}"
      @click="goTo(currentPage - 1)"
     >
       <img src="~img/arrow-left.svg" alt="Back">
@@ -21,7 +21,7 @@
     </div>
     <div
      class="product-paginator__arrow"
-     :class="{'product-paginator__arrow--hidden': this.currentPage === pageCount}"
+     :class="{'product-paginator__arrow--hidden': currentPage === pageCount || numberOfButtons < 2}"
      @click="goTo(currentPage + 1)"
     >
       <span>Forward</span>
@@ -33,8 +33,8 @@
 <script>
 export default {
   props: {
-    productCount: {
-      default: () => 101,
+    count: {
+      type: Number,
     },
     limit: {
       default: () => 6
@@ -43,7 +43,7 @@ export default {
   data () {
     return {
       currentPage: 1,
-      buttons: 7
+      maxButtons: 7
     }
   },
   methods: {
@@ -60,15 +60,15 @@ export default {
   },
   computed: {
     pageCount () {
-      return Math.ceil(this.productCount / this.limit)
+      return Math.ceil(this.count / this.limit)
     },
     numberOfButtons () {
-      return this.buttons >= 7
-        ? this.buttons
-        : 7
+      return (this.count / this.limit) < this.maxButtons 
+        ? Math.floor(this.count / this.limit)
+        : this.maxButtons
     },
     middleButton () {
-      return Math.floor(this.buttons / 2)
+      return Math.floor(this.numberOfButtons / 2)
     },
     pageCountSelection () {
       const selection = []
@@ -104,6 +104,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 2rem;
 
   &__arrow {
     cursor: pointer;

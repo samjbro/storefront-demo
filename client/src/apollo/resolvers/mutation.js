@@ -1,3 +1,5 @@
+import { GET_SEARCH_TERMS } from "../operations/queries";
+
 let overlayHidden = true
 
 export default {
@@ -31,5 +33,26 @@ export default {
       }
     })
     return null
+  },
+  setCurrentProduct: async (_, { product }, { cache }) => {
+    await cache.writeData({
+      data: {
+        currentProduct: product
+      }
+    })
+    return null
+  },
+  setSearchTerms: (_, { data: { page, limit, query_string }}, { cache }) => {
+    const { searchTerms } = cache.readQuery({ query: GET_SEARCH_TERMS})
+    const newTerms = searchTerms
+    newTerms.page = page || newTerms.page
+    newTerms.limit = limit || newTerms.limit
+    newTerms.query_string = query_string
+    cache.writeData({
+      data: {
+        searchTerms: newTerms
+      }
+    })
+    return newTerms
   }
 }

@@ -1,6 +1,7 @@
 type Query {
   me: Customer!
-  products(page: Int, limit: Int): ProductsPayload!
+  products(data: ProductSearchFields!): ProductsPayload!
+  product(id: String!): Product
 }
 
 type Mutation {
@@ -21,8 +22,12 @@ type Customer {
 type Product {
   product_id: ID!
   name: String!
+  description: String!
   price: String!
+  discounted_price: String!
   thumbnail: String!
+  image: String!
+  image_2: String!
 }
 
 type AuthPayload {
@@ -44,4 +49,10 @@ input RegisterCustomerInput {
   name: String!
   email: String!
   password: String!
+}
+
+input ProductSearchFields {
+  page: Int
+  limit: Int
+  query_string: String
 }

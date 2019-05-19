@@ -30,8 +30,8 @@ const GET_OVERLAY = gql`
 `
 
 const GET_PRODUCTS = gql`
-  query getProducts($page: Int, $limit: Int) {
-    products(page: $page, limit: $limit) {
+  query getProducts($data: ProductSearchFields!) {
+    products(data: $data) {
       count
       product_list {
         product_id
@@ -43,4 +43,42 @@ const GET_PRODUCTS = gql`
   }
 `
 
-export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS }
+const GET_PRODUCT = gql`
+  query getProduct($id: String!) {
+    product (id: $id) {
+      product_id
+      name
+      description
+      price
+      discounted_price
+      image
+      image_2
+    }
+  }
+`
+
+const GET_CURRENT_PRODUCT = gql`
+  query getCurrentProduct {
+    currentProduct @client {
+      product_id
+      name
+      description
+      price
+      discounted_price
+      image
+      image_2
+    }
+  }
+`
+
+const GET_SEARCH_TERMS = gql`
+  query getSearchTerms {
+    searchTerms @client {
+      page
+      limit
+      query_string
+    }
+  }
+`
+
+export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS, GET_PRODUCT, GET_CURRENT_PRODUCT, GET_SEARCH_TERMS }

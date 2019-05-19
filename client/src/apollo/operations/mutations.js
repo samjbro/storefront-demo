@@ -44,4 +44,16 @@ const SET_CURRENT_CUSTOMER = gql`
   }
 `
 
-export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER }
+const SET_CURRENT_PRODUCT = gql`
+  mutation setCurrentProduct($product: Product!) {
+    setCurrentProduct(product: $product) @client
+  }
+`
+
+const SET_SEARCH_TERMS = gql`
+  mutation setSearchTerms($data: ProductSearchFields) {
+    setSearchTerms(data: $data) @client
+  }
+`
+
+export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS }
