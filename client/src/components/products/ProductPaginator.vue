@@ -48,7 +48,7 @@ export default {
       this.$emit('goTo', page)
     },
     formatNumText(num, i) {
-      if(this.numberOfButtons < this.limit) return num
+      if(this.pageCount < this.numberOfButtons) return num
       if (i+1 === 2 && num !== 2) return '...'
       if ((i+1 === this.numberOfButtons -1) && num !== this.pageCount -1) return '...'
       return num
