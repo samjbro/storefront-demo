@@ -10,6 +10,8 @@ export default {
     __typename: 'SearchTerms',
     page: 1,
     limit: 2,
-    query_string: ''
+    query_string: '',
+    department_id: 0,
+    category_id: 0
   }
 }

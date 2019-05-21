@@ -4,11 +4,21 @@
       <img src="~img/logo-red.png" alt="ShopMate">
     </div>
     <div class="main-navbar__links">
-      <a @click.prevent="">Women</a>
-      <a @click.prevent="">Men</a>
-      <a @click.prevent="">Kids</a>
-      <a @click.prevent="">Shoes</a>
-      <a @click.prevent="">Brands</a>
+      <a 
+        class="main-navbar__link"
+        :class="{'main-navbar__link--active': searchTerms.department_id === 0}"
+        :key="0"
+        @click.prevent="showDepartment(0)">
+        All
+      </a>
+      <a 
+        v-for="department in departments" 
+        class="main-navbar__link"
+        :class="{'main-navbar__link--active': searchTerms.department_id == department.department_id}"
+        :key="department.department_id"
+        @click.prevent="showDepartment(department.department_id)">
+        {{ department.name }}
+      </a>
     </div>
     <div class="main-navbar__search">
       <img src="~img/icons-search-white.png" class="main-navbar__search-icon main-navbar__search-icon--left">
@@ -29,7 +39,7 @@
 
 <script>
 import { debounce } from '@/utils'
-import { GET_PRODUCTS, SET_SEARCH_TERMS } from '@/apollo/operations'
+import { GET_PRODUCTS, GET_SEARCH_TERMS, SET_SEARCH_TERMS, GET_DEPARTMENTS } from '@/apollo/operations'
 export default {
   data () {
     return {
@@ -47,11 +57,37 @@ export default {
         mutation: SET_SEARCH_TERMS,
         variables: {
           data: {
-            page: 1,
+            department_id: 0,
+            category_id: 0,
             query_string: this.search
           }
         }
       })
+    },
+    showDepartment (id) {
+      this.$apollo.mutate({
+        mutation: SET_SEARCH_TERMS,
+        variables: {
+          data:{
+            department_id: parseInt(id)
+          }
+        }
+      })
+    }
+  },
+  apollo: {
+    departments () {
+      return {
+        query: GET_DEPARTMENTS
+      }
+    },
+    searchTerms () {
+      return {
+        query: GET_SEARCH_TERMS,
+        result ({ data: { searchTerms } }) {
+          this.search = searchTerms.query_string
+        }
+      }
     }
   }
 }
@@ -73,10 +109,13 @@ export default {
     align-items: center;
     font-weight: 600;
 
-    & > * {
-      &:not(:last-child) {
-        margin-right: 1.5rem;
-      }
+  }
+  &__link {
+    &:not(:last-child) {
+      margin-right: 1.5rem;
+    }
+    &--active {
+      color: $color-red;
     }
   }
 

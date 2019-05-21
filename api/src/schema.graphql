@@ -2,6 +2,8 @@ type Query {
   me: Customer!
   products(data: ProductSearchFields!): ProductsPayload!
   product(id: String!): Product
+  departments: [Department!]!
+  categories: [Category]!
 }
 
 type Mutation {
@@ -30,6 +32,17 @@ type Product {
   image_2: String!
 }
 
+type Department {
+  department_id: ID!
+  name: String!
+  description: String!
+}
+type Category {
+  category_id: ID!
+  name: String!
+  description: String!
+}
+
 type AuthPayload {
   token: String!
   customer: Customer!
@@ -55,4 +68,6 @@ input ProductSearchFields {
   page: Int
   limit: Int
   query_string: String
+  department_id: Int
+  category_id: Int
 }

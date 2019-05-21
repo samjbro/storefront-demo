@@ -77,8 +77,30 @@ const GET_SEARCH_TERMS = gql`
       page
       limit
       query_string
+      department_id
+      category_id
     }
   }
 `
 
-export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS, GET_PRODUCT, GET_CURRENT_PRODUCT, GET_SEARCH_TERMS }
+const GET_DEPARTMENTS = gql`
+  query getDepartments {
+    departments {
+      department_id
+      name
+      description
+    }
+  }
+`
+
+const GET_CATEGORIES = gql`
+  query getCategories {
+    categories {
+      category_id
+      name
+      description
+    }
+  }
+`
+
+export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS, GET_PRODUCT, GET_CURRENT_PRODUCT, GET_SEARCH_TERMS, GET_DEPARTMENTS, GET_CATEGORIES }

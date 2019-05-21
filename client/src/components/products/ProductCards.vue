@@ -1,6 +1,6 @@
 <template>
   <div class="product-cards">
-    <ProductPaginator @goTo="getPage" :count="products ? parseInt(products.count) : 6" :currentPage="currentPage" :limit="searchTerms.limit" />
+    <ProductPaginator @goTo="getPage" :count="products ? parseInt(products.count) : searchTerms.limit" :currentPage="currentPage" :limit="searchTerms.limit" />
     <div class="product-cards__display" :class="{'product-cards__display--empty': !productsLoading && products.count === '0'}">
       <div 
         v-if="!productsLoading && products.count === '0'"
@@ -8,11 +8,11 @@
       >No Products Found</div>
       <template v-else>
       <transition
-        :name="prevPage < currentPage
-          ? 'product-cards__page--transitioning-left'
-          : 'product-cards__page--transitioning-right'"
+        :name="prevPage > currentPage
+          ? 'product-cards__page--transitioning-right'
+          : 'product-cards__page--transitioning-left'"
       >
-        <div class="product-cards__page" :key="currentPage">
+        <div class="product-cards__page" :key="pageKey">
           <template v-if="productsLoading">
             <ProductCard
               v-show="productsLoading"
@@ -73,13 +73,22 @@ export default {
       }
       return list
     },
+    pageKey () {
+      let key = ''
+      key += this.searchTerms.department_id && `Department:${this.searchTerms.department_id}`
+      key += this.searchTerms.category_id && `Category:${this.searchTerms.category_id}`
+      key += `Page:${this.currentPage}`
+      // Key must be unique in order to ensure the transition works whenever the page changes
+      return key
+    }
   },
   apollo: {
     searchTerms () {
       return {
         query: GET_SEARCH_TERMS,
-        result () {
+        result (data) {
           this.currentPage = 1
+          this.prevPage = 1
         }
       }
     },
@@ -90,9 +99,9 @@ export default {
         variables () {
           return {
             data: {
-              page: this.currentPage,
-              limit: this.searchTerms.limit,
-              query_string: this.searchTerms.query_string
+              ...this.searchTerms,
+              __typename: undefined,
+              page: this.currentPage
             }
           }
         }

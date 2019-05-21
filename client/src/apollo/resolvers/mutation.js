@@ -42,12 +42,35 @@ export default {
     })
     return null
   },
-  setSearchTerms: (_, { data: { page, limit, query_string }}, { cache }) => {
+  setSearchTerms: (_, { data: { page, limit, query_string, department_id, category_id }}, { cache }) => {
     const { searchTerms } = cache.readQuery({ query: GET_SEARCH_TERMS})
-    const newTerms = searchTerms
-    if (page) newTerms.page = page
-    if (limit) newTerms.limit = limit
-    if (typeof query_string === 'string') newTerms.query_string = query_string
+    const newTerms = {
+      __typename: searchTerms.__typename,
+      page: page || 1,
+      limit: limit || searchTerms.limit,
+      department_id: department_id || 0,
+      category_id: category_id || 0,
+      // category_id: typeof category_id === 'number' ? category_id : searchTerms.category_id,
+      query_string: ''
+    }
+    // console.log({department_id, searchTerms})
+    // if (searchTerms.department_id && department_id !) {
+    //   newTerms.department_id = 0
+    // }
+    // if (category_id === searchTerms.category_id) {
+    //   newTerms.category_id = 0
+    // }
+    // console.log({newTerms})
+    if (
+      (!newTerms.department_id || newTerms.department_id === searchTerms.department_id)
+      && (!newTerms.category_id || newTerms.category_id === searchTerms.category_id)
+
+    ) {
+      newTerms.query_string = typeof query_string === 'string'
+        ? query_string
+        : searchTerms.query_string
+    }
+
     cache.writeData({
       data: {
         searchTerms: newTerms
