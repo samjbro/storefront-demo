@@ -1,0 +1,32 @@
+.u-bg-shirt-color--white {
+  background-color: $color-white;
+}
+.u-bg-shirt-color--black {
+  background-color: $color-black;
+}
+.u-bg-shirt-color--red {
+  background-color: $color-red;
+}
+.u-bg-shirt-color--orange {
+  background-color: $color-orange;
+}
+.u-bg-shirt-color--yellow {
+  background-color: $color-yellow;
+}
+.u-bg-shirt-color--green {
+  background-color: $color-green;
+}
+.u-bg-shirt-color--blue {
+  background-color: $color-blue;
+}
+.u-bg-shirt-color--indigo {
+  background-color: $color-indigo;
+}
+.u-bg-shirt-color--purple {
+  background-color: $color-purple;
+}
+
+.u-bg-shirt-color--white,
+.u-bg-shirt-color--yellow {
+  border: 1px solid $color-gray-med;
+}

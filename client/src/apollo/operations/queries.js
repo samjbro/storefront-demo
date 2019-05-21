@@ -50,9 +50,20 @@ const GET_PRODUCT = gql`
       name
       description
       price
-      discounted_price
+      # discounted_price
       image
       image_2
+      attributes {
+        attribute_value_id
+        attribute_name
+        attribute_value
+      }
+      reviews {
+        name
+        review
+        rating
+        created_on
+      }
     }
   }
 `
@@ -64,9 +75,20 @@ const GET_CURRENT_PRODUCT = gql`
       name
       description
       price
-      discounted_price
+      #discounted_price
       image
       image_2
+      attributes {
+        attribute_value_id
+        attribute_name
+        attribute_value
+      }
+      reviews {
+        name
+        review
+        rating
+        created_on
+      }
     }
   }
 `

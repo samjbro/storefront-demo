@@ -30,6 +30,21 @@ type Product {
   thumbnail: String!
   image: String!
   image_2: String!
+  attributes: [Attribute!]!
+  reviews: [Review!]!
+}
+
+type Attribute {
+  attribute_value_id: ID!
+  attribute_name: String!
+  attribute_value: String!
+}
+
+type Review {
+  name: String!
+  review: String!
+  rating: Int!
+  created_on: String!
 }
 
 type Department {
