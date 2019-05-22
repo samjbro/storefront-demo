@@ -8,4 +8,13 @@
   cursor: pointer;
   font-size: 1.4rem;
   font-weight: 600;
+  transition: transform .1s;
+  outline: none;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(.95);
+  }
 }

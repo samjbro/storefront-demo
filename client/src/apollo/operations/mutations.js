@@ -56,4 +56,14 @@ const SET_SEARCH_TERMS = gql`
   }
 `
 
-export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS }
+const ADD_REVIEW = gql`
+  mutation addReview($data: AddReviewInput!) {
+    addReview(data: $data) {
+    review
+      rating
+      created_on
+    }
+  }
+`
+
+export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS, ADD_REVIEW }

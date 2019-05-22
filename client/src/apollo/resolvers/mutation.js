@@ -50,17 +50,9 @@ export default {
       limit: limit || searchTerms.limit,
       department_id: department_id || 0,
       category_id: category_id || 0,
-      // category_id: typeof category_id === 'number' ? category_id : searchTerms.category_id,
       query_string: ''
     }
-    // console.log({department_id, searchTerms})
-    // if (searchTerms.department_id && department_id !) {
-    //   newTerms.department_id = 0
-    // }
-    // if (category_id === searchTerms.category_id) {
-    //   newTerms.category_id = 0
-    // }
-    // console.log({newTerms})
+
     if (
       (!newTerms.department_id || newTerms.department_id === searchTerms.department_id)
       && (!newTerms.category_id || newTerms.category_id === searchTerms.category_id)

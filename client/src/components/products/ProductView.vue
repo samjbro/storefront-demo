@@ -25,99 +25,101 @@
           </div>
         </div>
       </div>
-      <div class="product-view__info" v-if="!showReviews">
-        <h1 class="product-view__name">
-          {{ currentProduct.name }}
-        </h1>
-        <div class="product-view__price">
-          {{ formattedPrice }}
+      <div class="product-view__info">
+        <div class="product-view__header">
+          <h1 class="product-view__name">
+            {{ currentProduct.name }}
+          </h1>
+          <div class="product-view__price">
+            {{ formattedPrice }}
+          </div>
+          <StarRating
+           :rating="averageRating" 
+          >
+            <template v-slot:link>
+              <a @click.prevent="toggleReviews">
+                <span v-if="showReviews">Back to the product</span>
+                <span v-else>Read the reviews</span>
+              </a>
+            </template>
+          </StarRating>
         </div>
-        <div class="product-view__rating">
-          <div v-if="averageRating === null" class="product-view__stars">No rating yet!</div>
-          <div v-else class="product-view__stars">
-            <div v-for="num in 5" :key="num" class="product-view__star-wrapper">
-              <div class="product-view__star">
-                <img src="~img/star-gray.svg" alt="empty-star">
-              </div>
-              <div class="product-view__star product-view__star--full"
-                :class="{
-                  'product-view__star--visible': averageRating + 0.5 >= num,
-                  'product-view__star--half': averageRating === num - 0.5
-                }">
-                <img src="~img/star-gold.svg" alt="full-star">
-              </div>
+        <ProductReviews 
+          v-if="showReviews" 
+          class="product-view__reviews" 
+          @toggleReviews="toggleReviews" 
+          :reviews="currentProduct.reviews"
+          />
+      
+        <div v-else class="product-view__details">
+          <div class="product-view__description">
+            {{ currentProduct.description }}
+          </div>
+          <div>
+            <div class="product-view__subheader">Color</div>
+            <div class="product-view__option">
+              <label
+                class="product-view__color"
+                v-for="color in colors"
+                :for="color.attribute_value"
+                :key="color.attribute_value_id"  
+              >
+                <input :id="color.attribute_value" type="radio" v-model="shirtColor" :value="color.attribute_value">
+                <span :class="`u-bg-shirt-color--${color.attribute_value.toLowerCase()}`"></span>
+              </label>
             </div>
           </div>
-          <a @click.prevent="toggleReviews">Read the reviews</a>
-        </div>
-        <div class="product-view__description">
-          {{ currentProduct.description }}
-        </div>
-        <div>
-          <div class="product-view__subheader">Color</div>
-          <div class="product-view__option">
-            <label
-              class="product-view__color"
-              v-for="color in colors"
-              :for="color.attribute_value"
-              :key="color.attribute_value_id"  
-            >
-              <input :id="color.attribute_value" type="radio" v-model="shirtColor" :value="color.attribute_value">
-              <span :class="`u-bg-shirt-color--${color.attribute_value.toLowerCase()}`"></span>
-            </label>
+          <div>
+            <div class="product-view__subheader">Size</div>  
+            <div class="product-view__option">
+              <label
+                class="product-view__size"
+                :class="{'product-view__size--selected': size.attribute_value === shirtSize}"
+                v-for="size in sizes"
+                :for="size.attribute_value"
+                :key="size.attribute_value_id"  
+              >
+                <input 
+                  :id="size.attribute_value" 
+                  type="radio" 
+                  v-model="shirtSize" 
+                  :value="size.attribute_value">
+                <span>{{ size.attribute_value }}</span>
+              </label>
+            </div>
           </div>
-        </div>
-        <div>
-          <div class="product-view__subheader">Size</div>  
-          <div class="product-view__option">
-            <label
-              class="product-view__size"
-              :class="{'product-view__size--selected': size.attribute_value === shirtSize}"
-              v-for="size in sizes"
-              :for="size.attribute_value"
-              :key="size.attribute_value_id"  
-            >
-              <input 
-                :id="size.attribute_value" 
-                type="radio" 
-                v-model="shirtSize" 
-                :value="size.attribute_value">
-              <span>{{ size.attribute_value }}</span>
-            </label>
+          <div>
+            <div class="product-view__subheader">Quantity</div>
+            <div class="product-view__quantity">
+              <button class="product-view__increment" @click="incrementQuantity(-1)">
+                <fa-icon :icon="['fas', 'minus']" />
+              </button>
+              <div class="product-view__indicator">{{ shirtQuantity }}</div>
+              <button class="product-view__increment" @click="incrementQuantity(1)">
+                <fa-icon :icon="['fas', 'plus']" />
+              </button>
+            </div>
           </div>
-        </div>
-        <div>
-          <div class="product-view__subheader">Quantity</div>
-          <div class="product-view__quantity">
-            <button class="product-view__increment" @click="incrementQuantity(-1)">
-              <fa-icon :icon="['fas', 'minus']" />
+          <div class="product-view__actions">
+            <button class="button product-view__buy">
+              Add to cart
             </button>
-            <div class="product-view__indicator">{{ shirtQuantity }}</div>
-            <button class="product-view__increment" @click="incrementQuantity(1)">
-              <fa-icon :icon="['fas', 'plus']" />
-            </button>
+            <div class="product-view__wishlist">
+              Add to wishlist
+            </div>
           </div>
         </div>
-        <div class="product-view__actions">
-          <button class="button product-view__buy">
-            Add to cart
-          </button>
-          <div class="product-view__wishlist">
-            Add to wishlist
-          </div>
-        </div>
-      </div>
-      <div class="product-view__reviews" v-else>
-        Reviews !
-        <a @click.prevent="toggleReviews">Back to product</a>
       </div>
     </template>
   </div>
 </template>
 
 <script>
+import StarRating from '@/components/shared/StarRating'
+import ProductReviews from './ProductReviews'
 import { GET_CURRENT_PRODUCT, GET_PRODUCT, SET_CURRENT_PRODUCT } from '@/apollo/operations'
 export default {
+  components: { StarRating, ProductReviews },
   data () {
     return {
       isLoading: 0,
@@ -125,7 +127,7 @@ export default {
       shirtColor: null,
       shirtSize: null,
       shirtQuantity: 1,
-      showReviews: 0
+      showReviews: false
     }
   },
   computed: {
@@ -170,6 +172,7 @@ export default {
     },
     async getProduct (direction) {
       this.isLoading = true
+      this.showReviews = false
       try {
         const { data } = await this.$apollo.query({
           query: GET_PRODUCT,
@@ -267,11 +270,18 @@ export default {
     display: flex;
     justify-content: center;
     padding-bottom: 3rem;
+
+    img {
+      cursor: pointer;
+    }
   }
-  &__info,
+
   &__reviews {
+  }
+  &__info {
     flex: 3;
     margin-left: 4rem;
+    margin-bottom: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -287,42 +297,9 @@ export default {
     font-weight: 600;
     margin-bottom: 1rem;
   }
-  &__rating {
-    min-height: 2.5rem;
-    display: flex;
-    align-items: center;
-    font-size: 1.6rem;
-    font-weight: 600;
-
-    a {
-      color: $color-red;
-      font-size: 1.4;
-      // font-weight: 300;
-    }
-  }
-  &__stars {
-    display: flex;
-    margin-right: 2rem;
-  }
-  &__star-wrapper {
-    position: relative;
-  }
-  &__star {
-    &--full {
-      display: none;
-      position: absolute;
-      top: 0;
-    }
-    &--visible {
-      display: block; 
-    }
-    &--half {
-      -webkit-clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
-      clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
-    }
-  }
+ 
   &__description {
-    min-height: 7rem;
+    min-height: 8rem;
   }
   &__options {
     display: flex;
@@ -467,6 +444,19 @@ export default {
     align-items: center;
     font-size: 4rem;
     color: $color-gray-light;
+  }
+
+  &__header {
+    flex: 1;
+  }
+  &__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  &__reviews,
+  &__details {
+    flex: 3;
   }
 }
 </style>

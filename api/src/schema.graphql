@@ -9,6 +9,7 @@ type Query {
 type Mutation {
   login (data: LoginCustomerInput!): AuthPayload!
   register (data: RegisterCustomerInput!): AuthPayload!
+  addReview (data: AddReviewInput!): Review
 }
 
 type Customer {
@@ -77,6 +78,12 @@ input RegisterCustomerInput {
   name: String!
   email: String!
   password: String!
+}
+
+input AddReviewInput {
+  review: String!
+  rating: Int!
+  product_id: String!
 }
 
 input ProductSearchFields {

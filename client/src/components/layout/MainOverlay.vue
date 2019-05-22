@@ -52,6 +52,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~#/abstracts/variables";
 .main-overlay {
   background-color: rgba(0,0,0, .8);
   position: fixed;
@@ -64,7 +65,7 @@ export default {
   align-items: center;
 
   &__panel {
-    background: #fff;
+    background: $color-white;
     padding: 4rem 3rem 2rem 3rem;
     position: relative;
     display: flex;
