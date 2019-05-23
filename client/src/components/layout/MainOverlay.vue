@@ -15,6 +15,7 @@
         <LoginForm v-if="overlay.view === 'login'" />
         <ContactForm v-if="overlay.view === 'contact'" />
         <ProductView v-if="overlay.view === 'product'" />
+        <ShoppingCart v-if="overlay.view === 'cart'" />
 
       </div>
     </div>
@@ -31,9 +32,10 @@ import RegisterForm from '@/components/forms/RegisterForm'
 import LoginForm from '@/components/forms/LoginForm'
 import ContactForm from '@/components/forms/ContactForm'
 import ProductView from '@/components/products/ProductView'
+import ShoppingCart from '@/components/cart/ShoppingCart'
 export default {
   mixins: [clickaway],
-  components: { RegisterForm, LoginForm, ContactForm, ProductView },
+  components: { RegisterForm, LoginForm, ContactForm, ProductView, ShoppingCart },
   methods: {
     close (){
       this.$apollo.mutate({

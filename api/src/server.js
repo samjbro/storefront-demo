@@ -3,6 +3,7 @@ import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import { importSchema } from 'graphql-import'
 
+import prisma from './prisma'
 import resolvers from './resolvers'
 
 const resolve = file => path.resolve(__dirname, '..', file)
@@ -11,7 +12,7 @@ const app = express()
 const apolloServer = new ApolloServer({
   typeDefs: importSchema(resolve('src/schema.graphql')),
   resolvers,
-  context: request => ({ request })
+  context: request => ({ request, prisma })
 })
 
 apolloServer.applyMiddleware({ app, path: '/graphql' })

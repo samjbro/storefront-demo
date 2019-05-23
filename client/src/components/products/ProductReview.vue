@@ -38,6 +38,7 @@ export default {
 .product-review {
   display: flex;
   padding: 1rem 1.5rem;
+  border-bottom: 1px solid $color-gray-light;
 
   &__info {
     flex: 1;

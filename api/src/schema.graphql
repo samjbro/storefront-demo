@@ -10,6 +10,7 @@ type Mutation {
   login (data: LoginCustomerInput!): AuthPayload!
   register (data: RegisterCustomerInput!): AuthPayload!
   addReview (data: AddReviewInput!): Review
+  addToCart (data: AddToCartInput!): CartItem!
 }
 
 type Customer {
@@ -20,6 +21,7 @@ type Customer {
   day_phone: String
   eve_phone: String
   mob_phone: String
+  cart: Cart!
 }
 
 type Product {
@@ -53,10 +55,24 @@ type Department {
   name: String!
   description: String!
 }
+
 type Category {
   category_id: ID!
   name: String!
   description: String!
+}
+
+type Cart {
+  cart_id: ID!
+  items: [CartItem!]!
+}
+
+type CartItem {
+  cart_item_id: ID!
+  product: Product!
+  color: String!
+  size: String!
+  quantity: Int!
 }
 
 type AuthPayload {
@@ -92,4 +108,11 @@ input ProductSearchFields {
   query_string: String
   department_id: Int
   category_id: Int
+}
+
+input AddToCartInput {
+  product_id: Int!
+  cart_id: String!
+  attributes: String!
+  quantity: Int!
 }

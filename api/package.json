@@ -24,7 +24,10 @@
   },
   "scripts": {
     "dev": "env-cmd ./config/dev.env nodemon src/index.js --exec babel-node",
-    "start": "npm run build && env-cmd ./config/prod.env node dist/index.js",
-    "build": "babel src -d dist"
+    "start": "npm run deploy:prod && npm run build && env-cmd ./config/prod.env node dist/index.js",
+    "build": "babel src -d dist",
+    "deploy:dev": "prisma deploy -e ./config/dev.env && npm run get-schema",
+    "deploy:prod": "prisma deploy",
+    "get-schema": "env-cmd ./config/dev.env graphql get-schema -p prisma"
   }
 }

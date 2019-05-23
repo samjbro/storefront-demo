@@ -1,0 +1,10 @@
+type Customer {
+  id: ID! @unique
+  turing_id: Int! @unique
+  cart: Cart! @relation(name: "CartToUser", onDelete: CASCADE)
+}
+
+type Cart {
+  id: ID! @unique
+  turing_id: String! @unique
+}

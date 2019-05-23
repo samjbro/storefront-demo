@@ -21,12 +21,12 @@
       <img src="~img/gbr.svg" alt="GBP">
       £ GBP
     </div>
-    <div class="main-header__checkout">
+    <div class="main-header__checkout" @click="showOverlay('cart')">
       <div class="main-header__bag">
         <img src="~img/icons-bag.svg" alt="Bag">
-        <div class="main-header__bag-number">6</div>
+        <div class="main-header__bag-number">{{ currentCustomer ? currentCustomer.cart.items.length : 0 }}</div>
       </div>
-      <div>Your bag: £3.99</div>
+      <div>Your bag: {{ currentCustomer ? '£3.99' : '£0.00' }}</div>
     </div>
   </div>
 </template>
@@ -47,6 +47,11 @@ export default {
     logout () {
       apolloClient.resetStore()
       localStorage.clear() 
+    }
+  },
+  computed: {
+    cartTotal () {
+      return this.currentCustomer ? '£3.99' : '£0.00'
     }
   },
   apollo: {
@@ -108,6 +113,13 @@ export default {
     display: flex; 
     justify-content: flex-end;
     align-items: center;
+    cursor: pointer;
+    &:hover {
+      color: $color-red;
+    }
+    &:active {
+      color: rgba($color-red, .7);
+    }
   }
 
   &__bag {

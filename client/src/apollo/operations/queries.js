@@ -1,13 +1,33 @@
 import gql from 'graphql-tag'
 
+let fragments = {}
+
+fragments = {
+  fullCart: gql`
+    fragment fullCart on Cart {
+      cart_id
+      items {
+        # cart_item_id
+        product {
+          name
+        }
+      }
+    }
+  `
+}
+
 const GET_ME = gql`
   query getMe {
     me {
       customer_id
       name
       email
+      cart {
+        ...fullCart
+      }
     }
   }
+  ${fragments.fullCart}
 `
 
 const GET_CURRENT_CUSTOMER = gql`
@@ -16,8 +36,12 @@ const GET_CURRENT_CUSTOMER = gql`
       customer_id
       name
       email
+      cart {
+        ...fullCart
+      }
     }
   }
+  ${fragments.fullCart}
 `
 
 const GET_OVERLAY = gql`
@@ -124,5 +148,21 @@ const GET_CATEGORIES = gql`
     }
   }
 `
+
+// const GET_CART = gql`
+//   query getCart {
+//     cart {
+//       cart_id
+//       items {
+//         product {
+//           name
+//         }
+//         color
+//         size
+//         quantity
+//       }
+//     }
+//   }
+// `
 
 export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS, GET_PRODUCT, GET_CURRENT_PRODUCT, GET_SEARCH_TERMS, GET_DEPARTMENTS, GET_CATEGORIES }

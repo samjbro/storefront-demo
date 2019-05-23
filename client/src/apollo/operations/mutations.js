@@ -20,6 +20,12 @@ const LOG_IN = gql`
         customer_id
         name
         email
+        cart {
+          cart_id
+          products {
+            name
+          }
+        }
       }
     }
   }
@@ -33,6 +39,12 @@ const REGISTER = gql`
         customer_id
         name
         email
+        cart {
+          cart_id
+          products {
+            name
+          }
+        }
       }
     }
   }
@@ -59,11 +71,26 @@ const SET_SEARCH_TERMS = gql`
 const ADD_REVIEW = gql`
   mutation addReview($data: AddReviewInput!) {
     addReview(data: $data) {
-    review
+      review
       rating
       created_on
     }
   }
 `
 
-export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS, ADD_REVIEW }
+const ADD_TO_CART = gql`
+  mutation addToCart($data: AddToCartInput!) {
+    addToCart(data: $data) {
+      product {
+        name
+        price
+        image
+      }
+      color
+      size
+      quantity
+    }
+  }
+`
+
+export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS, ADD_REVIEW, ADD_TO_CART }
