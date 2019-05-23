@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import fragments from './fragments'
 
 const SHOW_OVERLAY = gql`
   mutation showOverlay($view: String!) {
@@ -21,14 +22,12 @@ const LOG_IN = gql`
         name
         email
         cart {
-          cart_id
-          products {
-            name
-          }
+          ...fullCart
         }
       }
     }
   }
+  ${fragments.fullCart}
 `
 
 const REGISTER = gql`
@@ -40,14 +39,12 @@ const REGISTER = gql`
         name
         email
         cart {
-          cart_id
-          products {
-            name
-          }
+          ...fullCart
         }
       }
     }
   }
+  ${fragments.fullCart}
 `
 
 const SET_CURRENT_CUSTOMER = gql`

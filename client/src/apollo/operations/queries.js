@@ -1,20 +1,5 @@
 import gql from 'graphql-tag'
-
-let fragments = {}
-
-fragments = {
-  fullCart: gql`
-    fragment fullCart on Cart {
-      cart_id
-      items {
-        # cart_item_id
-        product {
-          name
-        }
-      }
-    }
-  `
-}
+import fragments from './fragments'
 
 const GET_ME = gql`
   query getMe {
