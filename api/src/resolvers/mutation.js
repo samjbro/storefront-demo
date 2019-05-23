@@ -72,6 +72,7 @@ export default {
   },
   addReview: async (parent, { data }, { request }) => {
     try {
+      console.log(request.req.headers['user-key'])
       await axios.post(
         `${endpoint}/products/${data.product_id}/reviews`,
         data,
@@ -81,13 +82,13 @@ export default {
          }
         }
       )
-
       return {
         review: data.review,
         rating: data.rating,
         created_on: moment().utcOffset('-0500').format("YYYY-MM-DD HH:mm:ss")
       }
     } catch (err) {
+      console.log(err)
       throw new Error(err)
     }
   },
@@ -97,8 +98,9 @@ export default {
         `${endpoint}/shoppingcart/add`,
         { cart_id, product_id, attributes }
       )
-      console.log({data})
-      const newItem = data.find(item => item.product_id === product_id)
+      const newItem = data.find(item => {
+        return item.product_id === product_id && item.attributes === attributes
+      })
       await axios.put(
         `${endpoint}/shoppingcart/update/${newItem.item_id}`,
         { quantity }
@@ -113,6 +115,37 @@ export default {
         size,
         quantity
       }
+    } catch (e) {
+      throw new Error(e)
+    }
+  },
+  updateCart: async (parent, { data: { item_id, quantity }}) => {
+    try {
+      const { data } = await axios.put(
+        `${endpoint}/shoppingcart/update/${item_id}`,
+        { quantity }
+      )
+      const item = data.find(item => item.item_id === item_id)
+      const [size, color] = item.attributes.split(', ')
+      return {
+        item_id: item.item_id,
+        product: {
+          ...item,
+        },
+        color,
+        size,
+        quantity
+      }
+    } catch (e) {
+      throw new Error(e)
+    }
+  },
+  removeCartItem: async (parent, { item_id }) => {
+    try {
+      await axios.delete(
+        `${endpoint}/shoppingcart/removeProduct/${item_id}`,
+      )
+      return true
     } catch (e) {
       throw new Error(e)
     }

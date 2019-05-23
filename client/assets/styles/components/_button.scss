@@ -17,4 +17,19 @@
   &:active {
     transform: scale(.95);
   }
+
+
+  &--inactive {
+    background-color: $color-off-white;
+    color: rgba($color-red, .6);
+    cursor: initial;
+
+    &:hover {
+      transform: none;
+    }
+    &:active {
+      transform: none;
+    }
+
+  }
 }

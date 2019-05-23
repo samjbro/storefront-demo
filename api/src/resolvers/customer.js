@@ -15,7 +15,7 @@ export default {
         cart_id: turing_id,
         items: cartRes.data.map((product, index) => {
           return {
-            // cart_item_id: index + 1,
+            item_id: product.item_id,
             product: {
               product_id: product.product_id,
               name: product.name,

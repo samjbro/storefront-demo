@@ -4,7 +4,7 @@
     <transition name="main-overlay__panel--transitioning">
     <div 
       class="main-overlay__panel"
-      v-show="overlay.showing"
+      v-if="overlay.showing"
       >
   <!-- v-on-clickaway="close"
     > -->

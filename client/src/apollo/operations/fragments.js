@@ -5,9 +5,15 @@ export default {
     fragment fullCart on Cart {
       cart_id
       items {
-        # cart_item_id
+        item_id
+        size
+        quantity
+        color
         product {
+          product_id
           name
+          price
+          image
         }
       }
     }

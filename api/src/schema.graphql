@@ -11,6 +11,8 @@ type Mutation {
   register (data: RegisterCustomerInput!): AuthPayload!
   addReview (data: AddReviewInput!): Review
   addToCart (data: AddToCartInput!): CartItem!
+  updateCart (data: UpdateCartInput!): CartItem!
+  removeCartItem (item_id: Int!): Boolean
 }
 
 type Customer {
@@ -68,7 +70,7 @@ type Cart {
 }
 
 type CartItem {
-  cart_item_id: ID!
+  item_id: ID!
   product: Product!
   color: String!
   size: String!
@@ -114,5 +116,10 @@ input AddToCartInput {
   product_id: Int!
   cart_id: String!
   attributes: String!
+  quantity: Int!
+}
+
+input UpdateCartInput {
+  item_id: Int!
   quantity: Int!
 }

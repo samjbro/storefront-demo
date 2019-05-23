@@ -23,7 +23,6 @@ const authLink = setContext(async (_, { headers }) => {
   }
 })
 
-
 const httpLink = new HttpLink({
   uri: '/graphql'
 })

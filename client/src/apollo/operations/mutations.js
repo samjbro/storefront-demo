@@ -78,7 +78,9 @@ const ADD_REVIEW = gql`
 const ADD_TO_CART = gql`
   mutation addToCart($data: AddToCartInput!) {
     addToCart(data: $data) {
+      item_id
       product {
+        product_id
         name
         price
         image
@@ -90,4 +92,27 @@ const ADD_TO_CART = gql`
   }
 `
 
-export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS, ADD_REVIEW, ADD_TO_CART }
+const UPDATE_CART = gql`
+  mutation updateCart($data: UpdateCartInput!) {
+    updateCart(data: $data) {
+      product {
+        # product_id
+        name
+        price
+        # We can't query the image because the API response doesn't return an image or a product_id, making it more difficult than it's worth to retrieve
+        # image
+      }
+      color
+      size
+      quantity
+    }
+  }
+`
+
+const REMOVE_CART_ITEM = gql`
+  mutation removeCartItem($item_id: Int!) {
+    removeCartItem(item_id: $item_id)
+  }
+`
+
+export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS, ADD_REVIEW, ADD_TO_CART, UPDATE_CART, REMOVE_CART_ITEM }

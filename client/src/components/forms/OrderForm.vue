@@ -35,21 +35,14 @@
     </div>
     <div class="order-form__attribute">
       <div class="order-form__subheader">Quantity</div>
-      <div class="order-form__quantity">
-        <button class="order-form__increment" @click="incrementQuantity(-1)">
-          <fa-icon :icon="['fas', 'minus']" />
-        </button>
-        <div class="order-form__indicator">{{ shirtQuantity }}</div>
-        <button class="order-form__increment" @click="incrementQuantity(1)">
-          <fa-icon :icon="['fas', 'plus']" />
-        </button>
-      </div>
+      <QuantityInput :quantity="shirtQuantity" @increment="incrementQuantity" />
     </div>
     <div class="order-form__actions">
-      <button class="button order-form__buy" @click="addToCart">
+      <button class="button" @click="addToCart" :class="{'button--inactive': productInCart}">
         <span v-if="addingToCart">
           <fa-icon :icon="['fas', 'spinner']" spin />
         </span>
+        <span v-else-if="productInCart">Already in cart</span>
         <span v-else>Add to cart</span>
       </button>
       <button class="button order-form__cart" @click="showCart">
@@ -61,7 +54,9 @@
 
 <script>
 import { ADD_TO_CART, GET_CURRENT_CUSTOMER, SHOW_OVERLAY } from '@/apollo/operations'
+import QuantityInput from '@/components/shared/QuantityInput'
 export default {
+  components: { QuantityInput },
   props: {
     product: Object
   },
@@ -86,6 +81,14 @@ export default {
     },
     attributeString () {
       return this.shirtSize + ', ' + this.shirtColor
+    },
+    productInCart () {
+      return this.currentCustomer.cart.items.find(item => {
+        const shirtInCart = item.product.product_id === this.product.product_id
+        const sizeInCart = item.size === this.shirtSize
+        const colorInCart = item.color === this.shirtColor
+        return shirtInCart && sizeInCart && colorInCart
+      })
     }
   },
   methods: {
@@ -94,20 +97,26 @@ export default {
       this.shirtQuantity += direction;
     },
     async addToCart () {
+      if (this.productInCart) return
       this.addingToCart++
       try {
+        console.log({
+          shirtColor: this.shirtColor,
+          shirtSize: this.shirtSize
+        })
         await this.$apollo.mutate({
           mutation: ADD_TO_CART,
           variables: {
             data: {
               product_id: parseInt(this.product.product_id),
               cart_id: this.currentCustomer.cart.cart_id,
-              attributes: this.attributeString,
+              attributes: this.shirtSize + ', ' + this.shirtColor,
               quantity: this.shirtQuantity
             }
           },
           update: (cache, { data: { addToCart }}) => {
-            this.currentCustomer.cart.items.push(addToCart)
+            console.log(addToCart)
+            this.currentCustomer.cart.items.unshift(addToCart)
             cache.writeQuery({ query: GET_CURRENT_CUSTOMER, data: {
               currentCustomer: this.currentCustomer
             }})
@@ -213,46 +222,6 @@ export default {
       justify-content: center; 
       align-items: center;
     }
-  }
-  &__quantity {
-    display: flex;
-    height: 3.5rem;
-    & > * {
-      &:not(:last-child) {
-        margin-right: .5rem;
-      }
-    }
-  }
-  &__increment {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 3.5rem;
-    height: 100%;
-    width: 3.5rem;
-    border-radius: 50%;
-    background-color: $color-gray-light;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    svg {
-      font-size: 1.5rem;
-      color: $color-black;
-    }
-    &:active {
-      border: 1px solid $color-red;
-    }
-  }
-  &__indicator {
-    width: 5rem;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5rem;
-    border: 1px solid $color-gray-light;
-    font-weight: 600;
-    font-size: 1.4rem;
   }
 
   &__actions {

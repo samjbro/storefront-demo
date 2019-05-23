@@ -47,7 +47,8 @@ export default {
             }
           }
         })
-        this.remember && localStorage.setItem('token', data.login.token)
+        // this.remember && localStorage.setItem('token', data.login.token)
+        localStorage.setItem('token', data.login.token)
         await this.$apollo.mutate({
           mutation: SET_CURRENT_CUSTOMER,
           variables: {
