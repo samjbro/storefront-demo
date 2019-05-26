@@ -19,6 +19,10 @@ export default {
     MainOverlay
   },
   async mounted () {
+    if (!localStorage.getItem('rememberMe')) {
+      localStorage.removeItem('token')
+      return
+    }
     try {
       const { data } = await this.$apollo.query({
         query: GET_ME

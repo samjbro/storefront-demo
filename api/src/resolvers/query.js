@@ -64,5 +64,14 @@ export default {
     } catch (e) {
       throw new Error(e)
     }
+  },
+  shippingRegions: async () => {
+    try {
+      const { data } = await axios.get(`${endpoint}/shipping/regions`)
+      delete data[0]
+      return data
+    } catch (e) {
+      throw new Error(e)
+    }
   }
 }

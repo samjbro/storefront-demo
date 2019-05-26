@@ -31,5 +31,15 @@ export default {
     } catch(e) {
       throw new Error(e)
     }
+  },
+  address: async (parent) => {
+    const { data} = await axios.get(`${endpoint}/shipping/regions`)
+    return {
+      address: parent.address_1,
+      city: parent.city,
+      state: parent.region,
+      zipCode: parent.postal_code,
+      shippingRegion: data.find(region => region.shipping_region_id === parent.shipping_region_id)
+    }
   }
 }

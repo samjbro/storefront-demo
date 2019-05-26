@@ -14,7 +14,7 @@
         />
       </div>
       <div class="product-reviews__add">
-        <a @click.prevent="addReview = true">
+        <a @click.prevent="currentCustomer ? addReview = true : showOverlay('login')">
           Add a review
         </a>
       </div>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { SHOW_OVERLAY, GET_CURRENT_CUSTOMER } from '@/apollo/operations'
 import ProductReview from './ProductReview'
 import ReviewForm from '@/components/forms/ReviewForm'
 export default {
@@ -33,6 +34,23 @@ export default {
   data () {
     return {
       addReview: false
+    }
+  },
+  methods: {
+    showOverlay (view) {
+      this.$apollo.mutate({
+        mutation: SHOW_OVERLAY,
+        variables: {
+          view
+        }
+      })
+    }
+  },
+  apollo: {
+    currentCustomer () {
+      return {
+        query: GET_CURRENT_CUSTOMER
+      }
     }
   }
 }

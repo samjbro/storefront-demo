@@ -10,6 +10,8 @@
   font-weight: 600;
   transition: transform .1s;
   outline: none;
+  text-align: center;
+  max-width: 15rem;
 
   &:hover {
     transform: scale(1.05);

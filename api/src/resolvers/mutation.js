@@ -149,5 +149,57 @@ export default {
     } catch (e) {
       throw new Error(e)
     }
+  },
+  addCustomerAddress: async (parent,
+    { data: { firstName, lastName, address, city, state, zipCode, shippingRegionId, shippingCountry } },
+    { request }) => {
+    try {
+      console.log({shippingCountry})
+      // The API route doesn't accept first and last names as variables yet
+      const { data } = await axios.put(
+        `${endpoint}/customers/address`,
+        {
+          address_1: address,
+          city,
+          region: state,
+          postal_code: zipCode,
+          country: shippingCountry,
+          shipping_region_id: parseInt(shippingRegionId)
+        },
+        {
+          headers: {
+            'user-key': request.req.headers['user-key']
+          }
+        }
+      )
+      return data
+    } catch (e) {
+      console.log(e.response.data.error)
+      throw new Error(e)
+    }
+  },
+  createOrder: async (parent, { data: { shippingId, cartId } }, { request }) => {
+    try {
+      console.log({shippingId, cartId})
+      console.log(`${endpoint}/orders`)
+      console.log(request.req.headers['user-key'])
+      const { data } = await axios.post(`${endpoint}/orders`,
+       {
+        shipping_id: shippingId,
+        cart_id: cartId
+      },
+      {
+        headers: {
+          'user-key': request.req.headers['user-key']
+        }
+      })
+      console.log('order created')
+      console.log(data)
+      return data.orderId
+    } catch (e) {
+      console.log(e)
+      console.log(e.response.data.error)
+      throw new Error(e)
+    }
   }
 }

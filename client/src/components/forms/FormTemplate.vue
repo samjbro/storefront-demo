@@ -110,7 +110,7 @@ export default {
       color: $color-red;
     }
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
   }
 }
 </style>

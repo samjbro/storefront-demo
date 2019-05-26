@@ -18,16 +18,11 @@ const LOG_IN = gql`
     login(data: $data) {
       token
       customer {
-        customer_id
-        name
-        email
-        cart {
-          ...fullCart
-        }
+        ...customerInfo
       }
     }
   }
-  ${fragments.fullCart}
+  ${fragments.customerInfo}
 `
 
 const REGISTER = gql`
@@ -35,16 +30,11 @@ const REGISTER = gql`
     register(data: $data) {
       token
       customer {
-        customer_id
-        name
-        email
-        cart {
-          ...fullCart
-        }
+        ...customerInfo
       }
     }
   }
-  ${fragments.fullCart}
+  ${fragments.customerInfo}
 `
 
 const SET_CURRENT_CUSTOMER = gql`
@@ -115,4 +105,25 @@ const REMOVE_CART_ITEM = gql`
   }
 `
 
-export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS, ADD_REVIEW, ADD_TO_CART, UPDATE_CART, REMOVE_CART_ITEM }
+const ADD_CUSTOMER_ADDRESS = gql`
+  mutation addCustomerAddress($data: AddAddressInput!) {
+    addCustomerAddress(data: $data) {
+      ...customerInfo
+    }
+  }
+  ${fragments.customerInfo}
+`
+
+const CREATE_ORDER = gql`
+  mutation createOrder($data: CreateOrderInput!) {
+    createOrder(data: $data)
+  }
+`
+
+const SET_SHIPPING_TYPE = gql`
+  mutation setShippingType($shippingType: ShippingType!) {
+    setShippingType(shippingType: $shippingType) @client
+  }
+`
+
+export { SHOW_OVERLAY, CLOSE_OVERLAY, LOG_IN, REGISTER, SET_CURRENT_CUSTOMER, SET_CURRENT_PRODUCT, SET_SEARCH_TERMS, ADD_REVIEW, ADD_TO_CART, UPDATE_CART, REMOVE_CART_ITEM, ADD_CUSTOMER_ADDRESS, CREATE_ORDER, SET_SHIPPING_TYPE }

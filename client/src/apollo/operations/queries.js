@@ -4,29 +4,19 @@ import fragments from './fragments'
 const GET_ME = gql`
   query getMe {
     me {
-      customer_id
-      name
-      email
-      cart {
-        ...fullCart
-      }
+      ...customerInfo
     }
   }
-  ${fragments.fullCart}
+  ${fragments.customerInfo}
 `
 
 const GET_CURRENT_CUSTOMER = gql`
   query getCurrentCustomer {
     currentCustomer @client {
-      customer_id
-      name
-      email
-      cart {
-        ...fullCart
-      }
+      ...customerInfo
     }
   }
-  ${fragments.fullCart}
+  ${fragments.customerInfo}
 `
 
 const GET_OVERLAY = gql`
@@ -134,6 +124,20 @@ const GET_CATEGORIES = gql`
   }
 `
 
+const GET_SHIPPING_REGIONS = gql`
+  query getShippingRegions {
+    shippingRegions {
+      shipping_region_id
+      shipping_region
+      shipping_types {
+        shipping_id
+        shipping_type
+        shipping_cost
+      }
+    }
+  }
+`
+
 // const GET_CART = gql`
 //   query getCart {
 //     cart {
@@ -150,4 +154,16 @@ const GET_CATEGORIES = gql`
 //   }
 // `
 
-export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS, GET_PRODUCT, GET_CURRENT_PRODUCT, GET_SEARCH_TERMS, GET_DEPARTMENTS, GET_CATEGORIES }
+const GET_SHIPPING_TYPE = gql`
+  query getShippingType {
+    shippingType @client {
+      shipping_id
+      shipping_type
+      shipping_cost
+    }
+  }
+`
+
+
+
+export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS, GET_PRODUCT, GET_CURRENT_PRODUCT, GET_SEARCH_TERMS, GET_DEPARTMENTS, GET_CATEGORIES, GET_SHIPPING_REGIONS, GET_SHIPPING_TYPE }

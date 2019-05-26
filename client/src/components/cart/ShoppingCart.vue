@@ -1,7 +1,7 @@
 <template>
   <div class="shopping-cart">
     <h1 class="shopping-cart__header">
-      {{ currentCustomer.cart.items.length }} Items In Your Cart
+      {{ currentCustomer.cart.items.length }} Item{{ currentCustomer.cart.items.length !== 1 ? 's' : ''}} In Your Cart
     </h1>
     <div class="shopping-cart__content">
       <div>
@@ -21,6 +21,11 @@
         </div>
       </div>
       <div class="shopping-cart__items">
+        <div v-if="!currentCustomer.cart.items.length" class="shopping-cart__row">
+          <div class="shopping-cart__col shopping-cart__col--item shopping-cart__col--empty">
+            No Items In Cart
+          </div>
+        </div>
         <div 
           class="shopping-cart__row"
           v-for="item in currentCustomer.cart.items" :key="item.cart_item_id">
@@ -60,7 +65,7 @@
     </div>
     <div class="shopping-cart__buttons">
       <button class="button" @click="goBack">Back</button>
-      <button class="button">Checkout</button>
+      <button class="button" @click="checkout">Checkout</button>
     </div>
   </div>
 </template>
@@ -85,6 +90,14 @@ export default {
         })
       }
     },
+    checkout () {
+      this.$apollo.mutate({
+        mutation: SHOW_OVERLAY,
+        variables: {
+          view: 'checkout'
+        }
+      })
+    },
     getItemPrice (item) {
       return ((parseFloat(item.product.price) * 100 * item.quantity)/ 100).toFixed(2)
     },
@@ -99,6 +112,16 @@ export default {
           data: {
             item_id: parseInt(item.item_id),
             quantity: item.quantity + direction
+          }
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          updateCart: {
+            __typename: 'CartItem',
+            quantity: item.quantity + direction,
+            product: item.product,
+            size: item.size,
+            color: item.color
           }
         },
         update: (cache, { data: { updateCart }}) => {
@@ -212,6 +235,14 @@ export default {
     &--header {
       font-size: 1.3rem;
       font-weight: 600;
+    }
+    &--empty {
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      color: $color-gray-light-2;
+      margin: 3rem 0;
     }
   }
 

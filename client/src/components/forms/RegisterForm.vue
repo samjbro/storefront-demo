@@ -11,14 +11,13 @@
       <span>Sign Up</span>
     </template>
     <template v-slot:links>
-      <span>Already a member?</span>
-      <a class="login-form__link">Sign In</a>
+      <a class="login-form__link" @click="showOverlay('login')">Already have an account?</a>
     </template>
   </FormTemplate>
 </template>
 
 <script>
-import { REGISTER, SET_CURRENT_CUSTOMER, CLOSE_OVERLAY } from '@/apollo/operations'
+import { REGISTER, SET_CURRENT_CUSTOMER, CLOSE_OVERLAY, SHOW_OVERLAY } from '@/apollo/operations'
 import FormTemplate from './FormTemplate'
 export default {
   components: { FormTemplate },
@@ -60,6 +59,14 @@ export default {
         this.$refs.form.fail(e.message.replace('GraphQL error: ', ''))
         console.error(e)
       }
+    },
+    showOverlay (view) {
+      this.$apollo.mutate({
+        mutation: SHOW_OVERLAY,
+        variables: {
+          view
+        }
+      })
     }
   }
 }

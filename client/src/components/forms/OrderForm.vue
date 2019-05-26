@@ -45,7 +45,7 @@
         <span v-else-if="productInCart">Already in cart</span>
         <span v-else>Add to cart</span>
       </button>
-      <button class="button order-form__cart" @click="showCart">
+      <button class="button order-form__cart" @click="currentCustomer ? showOverlay('cart') : showOverlay('login')">
         View cart
       </button>
     </div>
@@ -83,6 +83,7 @@ export default {
       return this.shirtSize + ', ' + this.shirtColor
     },
     productInCart () {
+      if (!this.currentCustomer) return false
       return this.currentCustomer.cart.items.find(item => {
         const shirtInCart = item.product.product_id === this.product.product_id
         const sizeInCart = item.size === this.shirtSize
@@ -97,13 +98,10 @@ export default {
       this.shirtQuantity += direction;
     },
     async addToCart () {
-      if (this.productInCart) return
+      if (!this.currentCustomer) this.showOverlay('login')
+      if (!this.currentCustomer || this.productInCart || this.addingToCart) return
       this.addingToCart++
       try {
-        console.log({
-          shirtColor: this.shirtColor,
-          shirtSize: this.shirtSize
-        })
         await this.$apollo.mutate({
           mutation: ADD_TO_CART,
           variables: {
@@ -115,7 +113,6 @@ export default {
             }
           },
           update: (cache, { data: { addToCart }}) => {
-            console.log(addToCart)
             this.currentCustomer.cart.items.unshift(addToCart)
             cache.writeQuery({ query: GET_CURRENT_CUSTOMER, data: {
               currentCustomer: this.currentCustomer
@@ -128,14 +125,14 @@ export default {
         throw new Error(e)
       }
     },
-    showCart () {
+    showOverlay (view) {
       this.$apollo.mutate({
         mutation: SHOW_OVERLAY,
         variables: {
-          view: 'cart'
+          view
         }
       })
-    },
+    }
   },
   apollo: {
     currentCustomer () {

@@ -4,6 +4,7 @@ type Query {
   product(id: String!): Product
   departments: [Department!]!
   categories: [Category]!
+  shippingRegions: [ShippingRegion!]!
 }
 
 type Mutation {
@@ -13,6 +14,8 @@ type Mutation {
   addToCart (data: AddToCartInput!): CartItem!
   updateCart (data: UpdateCartInput!): CartItem!
   removeCartItem (item_id: Int!): Boolean
+  addCustomerAddress (data: AddAddressInput!): Customer!
+  createOrder (data: CreateOrderInput!): Int!
 }
 
 type Customer {
@@ -24,6 +27,8 @@ type Customer {
   eve_phone: String
   mob_phone: String
   cart: Cart!
+  address: Address!
+  order: Order
 }
 
 type Product {
@@ -77,6 +82,32 @@ type CartItem {
   quantity: Int!
 }
 
+type Address {
+  address: String
+  city: String
+  state: String
+  zipCode: String
+  country: String #add this
+  shippingRegion: ShippingRegion
+}
+
+type ShippingRegion {
+  shipping_region_id: Int!,
+  shipping_region: String!
+  shipping_types: [ShippingType!]!
+}
+
+type ShippingType {
+  shipping_id: Int!
+  shipping_type: String!
+  shipping_cost: String!
+}
+
+type Order {
+  cart: Cart!
+  shipping: ShippingType!
+}
+
 type AuthPayload {
   token: String!
   customer: Customer!
@@ -122,4 +153,20 @@ input AddToCartInput {
 input UpdateCartInput {
   item_id: Int!
   quantity: Int!
+}
+
+input AddAddressInput {
+  firstName: String!
+  lastName: String!
+  address: String!
+  city: String!
+  state: String!
+  zipCode: String!
+  shippingRegionId: Int!
+  shippingCountry: String!
+}
+
+input CreateOrderInput {
+  shippingId: Int!
+  cartId: String!
 }

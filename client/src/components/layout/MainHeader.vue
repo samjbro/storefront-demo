@@ -21,12 +21,12 @@
       <img src="~img/gbr.svg" alt="GBP">
       £ GBP
     </div>
-    <div class="main-header__checkout" @click="showOverlay('cart')">
+    <div class="main-header__checkout" @click="currentCustomer ? showOverlay('cart') : showOverlay('login')">
       <div class="main-header__bag">
         <img src="~img/icons-bag.svg" alt="Bag">
         <div class="main-header__bag-number">{{ currentCustomer ? currentCustomer.cart.items.length : 0 }}</div>
       </div>
-      <div>Your bag: {{ currentCustomer ? '£3.99' : '£0.00' }}</div>
+      <div>Your bag: {{ formatPrice(cartTotal) }}</div>
     </div>
   </div>
 </template>
@@ -44,6 +44,12 @@ export default {
         }
       })
     },
+    getItemPrice (item) {
+      return ((parseFloat(item.product.price) * 100 * item.quantity)/ 100).toFixed(2)
+    },
+    formatPrice (price) {
+      return '£' + price
+    },
     logout () {
       apolloClient.resetStore()
       localStorage.clear() 
@@ -51,7 +57,10 @@ export default {
   },
   computed: {
     cartTotal () {
-      return this.currentCustomer ? '£3.99' : '£0.00'
+      if (!this.currentCustomer) return '0.00'
+      return this.currentCustomer.cart.items.reduce((cur, inc) => {
+        return cur + parseFloat(this.getItemPrice(inc))
+      }, 0).toFixed(2)
     }
   },
   apollo: {

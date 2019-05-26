@@ -15,14 +15,13 @@
       <span>Sign In</span>
     </template>
     <template v-slot:links>
-      <a class="login-form__link">Forgot password</a>
-      <a class="login-form__link">Have an account</a>
+      <a class="login-form__link" @click="showOverlay('register')">Don't have an account?</a>
     </template>
   </FormTemplate>
 </template>
 
 <script>
-import { LOG_IN, SET_CURRENT_CUSTOMER, CLOSE_OVERLAY } from '@/apollo/operations'
+import { LOG_IN, SET_CURRENT_CUSTOMER, CLOSE_OVERLAY, SHOW_OVERLAY } from '@/apollo/operations'
 import FormTemplate from './FormTemplate'
 export default {
   components: { FormTemplate },
@@ -47,8 +46,9 @@ export default {
             }
           }
         })
-        // this.remember && localStorage.setItem('token', data.login.token)
+        this.remember && localStorage.setItem('token', data.login.token)
         localStorage.setItem('token', data.login.token)
+        if (this.remember) localStorage.setItem('rememberMe', true)
         await this.$apollo.mutate({
           mutation: SET_CURRENT_CUSTOMER,
           variables: {
@@ -62,6 +62,14 @@ export default {
         this.$refs.form.fail(e.message.replace('GraphQL error: ', ''))
         console.error(e)
       }
+    },
+    showOverlay (view) {
+      this.$apollo.mutate({
+        mutation: SHOW_OVERLAY,
+        variables: {
+          view
+        }
+      })
     }
   }
 }

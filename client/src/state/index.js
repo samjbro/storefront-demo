@@ -13,5 +13,6 @@ export default {
     query_string: '',
     department_id: 0,
     category_id: 0
-  }
+  },
+  shippingType: null
 }

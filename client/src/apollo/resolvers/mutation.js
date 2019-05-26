@@ -69,5 +69,13 @@ export default {
       }
     })
     return newTerms
+  },
+  setShippingType: (_, { shippingType }, { cache }) => {
+    cache.writeData({
+      data: {
+        shippingType
+      }
+    })
+    return null
   }
 }
