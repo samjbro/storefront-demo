@@ -1,6 +1,8 @@
 import axios from 'axios'
 import moment from 'moment'
 
+import { getStripeToken } from '../utils'
+
 const endpoint = process.env.REST_API_ENDPOINT
 
 export default {
@@ -178,12 +180,11 @@ export default {
       throw new Error(e)
     }
   },
-  createOrder: async (parent, { data: { shippingId, cartId } }, { request }) => {
+  createOrder: async (parent, { data: { shippingId, cartId, cardData } }, { request }) => {
     try {
-      console.log({shippingId, cartId})
-      console.log(`${endpoint}/orders`)
-      console.log(request.req.headers['user-key'])
-      const { data } = await axios.post(`${endpoint}/orders`,
+      const token = await getStripeToken(cardData)
+console.log({token})
+      const orderPostResponse = await axios.post(`${endpoint}/orders`,
        {
         shipping_id: shippingId,
         cart_id: cartId
@@ -193,9 +194,27 @@ export default {
           'user-key': request.req.headers['user-key']
         }
       })
-      console.log('order created')
-      console.log(data)
-      return data.orderId
+      const orderId = orderPostResponse.data.orderId
+      // The orders post route only returns the order id, so to get the total order amount we must make another request
+      const orderGetResponse = await axios.get(`${endpoint}/orders/shortDetail/${orderId}`, {
+        headers: {
+          'user-key': request.req.headers['user-key']
+        }
+      })
+      const totalAmount = orderGetResponse.data.total_amount
+
+      const paymentResponse = await axios.post(`${endpoint}/stripe/charge`, {
+        stripeToken: token.id,
+        order_id: orderId,
+        description: 'Test payment to Stripe',
+        // Convert float into integer
+        amount: parseInt(totalAmount.replace('.', '')),
+        currency: 'GBP'
+      })
+
+      console.log({paymentResponse})
+
+      return paymentResponse
     } catch (e) {
       console.log(e)
       console.log(e.response.data.error)

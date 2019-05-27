@@ -6,8 +6,6 @@ export default {
   shipping_types: async (parent) => {
     try{
       const { data } = await axios.get(`${endpoint}/shipping/regions/${parent.shipping_region_id}`)
-      console.log({TYPE: data
-      })
       return data
     } catch (e) {
       throw new Error(e)

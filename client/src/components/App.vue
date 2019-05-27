@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { GET_ME, SET_CURRENT_CUSTOMER } from '@/apollo/operations'
+import { GET_ME, SET_CURRENT_CUSTOMER, GET_SHIPPING_REGIONS } from '@/apollo/operations'
 import MainHeader from './layout/MainHeader'
 import MainContent from './layout/MainContent'
 import MainOverlay from './layout/MainOverlay'
@@ -35,6 +35,14 @@ export default {
       })
     } catch (e) {
       console.error(e)
+    }
+  },
+  apollo: {
+    // Retrieving shipping regions on app load to make checkout smoother
+    shippingRegions () {
+      return {
+        query: GET_SHIPPING_REGIONS
+      }
     }
   }
 }

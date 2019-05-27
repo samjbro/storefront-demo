@@ -169,4 +169,12 @@ input AddAddressInput {
 input CreateOrderInput {
   shippingId: Int!
   cartId: String!
+  cardData: CardDataInput!
+}
+
+input CardDataInput {
+  cardholderName: String!
+  cardNumber: String!
+  CVC: String!
+  expiryDate: String!
 }

@@ -52,7 +52,7 @@
           <div class="confirmation-page__shipping">
             <h4>Delivery options</h4>
             <div>
-              {{ shippingType.shipping_type }}
+              {{ shippingType && shippingType.shipping_type }}
             </div>
           </div>
         </div>
@@ -72,14 +72,19 @@
         </div>
       </div>
     </div>
-    <CheckoutButtons @submit="submit" @cancel="cancel" />
+    <CheckoutButtons @submit="submit" @cancel="cancel">
+      <template v-slot:submitText>
+        <span>Next</span>
+      </template>
+    </CheckoutButtons>
   </div>
 </template>
 
 <script>
-import { GET_SHIPPING_TYPE, GET_CURRENT_CUSTOMER} from '@/apollo/operations'
+import hasCartTotal from './hasCartTotal'
 import CheckoutButtons from './CheckoutButtons'
 export default {
+  mixins: [hasCartTotal],
   components: { CheckoutButtons },
   methods: {
     submit () {
@@ -87,20 +92,9 @@ export default {
     },
     cancel () {
       this.$emit('cancel')
-    },
-    getItemPrice (item) {
-      return ((parseFloat(item.product.price) * 100 * item.quantity)/ 100).toFixed(2)
-    },
-    formatPrice (...prices) {
-      return '£' + prices.reduce((acc, curr) => acc + parseFloat(curr), 0)
     }
   },
   computed: {
-    cartTotal () {
-      return this.currentCustomer.cart.items.reduce((cur, inc) => {
-        return cur + parseFloat(this.getItemPrice(inc))
-      }, 0).toFixed(2)
-    },
     address () {
       return {
             line1: this.currentCustomer.address.address + ', ' +
@@ -108,18 +102,6 @@ export default {
             line2: this.currentCustomer.address.state + ', ' +
                    this.currentCustomer.address.zipCode + ', ' +
                    this.currentCustomer.address.shippingRegion.shipping_region
-      }
-    }
-  },
-  apollo: {
-    shippingType () {
-      return {
-        query: GET_SHIPPING_TYPE
-      }
-    },
-    currentCustomer () {
-      return {
-        query: GET_CURRENT_CUSTOMER
       }
     }
   }

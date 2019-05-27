@@ -138,22 +138,6 @@ const GET_SHIPPING_REGIONS = gql`
   }
 `
 
-// const GET_CART = gql`
-//   query getCart {
-//     cart {
-//       cart_id
-//       items {
-//         product {
-//           name
-//         }
-//         color
-//         size
-//         quantity
-//       }
-//     }
-//   }
-// `
-
 const GET_SHIPPING_TYPE = gql`
   query getShippingType {
     shippingType @client {

@@ -76,7 +76,11 @@
         {{ error.message }}
       </template>
     </div>
-    <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="settingAddress" />
+    <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="settingAddress">
+      <template v-slot:submitText>
+        <span>Pay</span>
+      </template>
+    </CheckoutButtons>
   </div>
 </template>
 
@@ -132,15 +136,6 @@ export default {
             }})
           }
         })
-        // await this.$apollo.mutate({
-          //   mutation: CREATE_ORDER,
-        //   variables: {
-          //     data: {
-            //       cartId: this.currentCustomer.cart.cart_id,
-        //       shippingId: this.deliveryData.shippingId
-        //     }
-        //   }
-        // })
         this.settingAddress--
         this.$emit('submit')
       } catch (e) {

@@ -6,7 +6,7 @@
     <div class="button checkout-buttons__submit" @click="$emit('submit')">
       <fa-icon v-if="submitting" :icon="['fas', 'spinner']" spin />
       <template v-else>
-        {{ last ? 'Back To Shop' : 'Next Step' }}
+        <slot name="submitText" />
       </template>
     </div>
   </div>
