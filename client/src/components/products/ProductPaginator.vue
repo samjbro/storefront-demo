@@ -96,11 +96,17 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .product-paginator {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 2rem;
+
+
+  @include respond(phone) {
+    font-size: 1.7rem;
+  }
 
   &__arrow {
     cursor: pointer;
@@ -135,7 +141,10 @@ export default {
     align-items: center;
     transition: transform 1s;
     cursor: pointer;
-
+    @include respond(phone) {
+      height: 2.5rem;
+      width: 2.5rem;    
+    }
     &:hover {
       transform: scale(1.2);
     }

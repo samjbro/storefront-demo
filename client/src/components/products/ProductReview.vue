@@ -37,6 +37,8 @@ export default {
 @import "~#/abstracts/variables";
 .product-review {
   display: flex;
+  width: 100%;
+  min-height: 10rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid $color-gray-light;
 

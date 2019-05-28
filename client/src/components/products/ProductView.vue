@@ -137,10 +137,14 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .product-view {
   display: flex;
-  width: 80vw;
-  height: 75vh;
+  height: 100%;
+
+  @include respond(phone) {     
+    flex-direction: column;
+  }
 
   &__arrow {
     position: absolute;
@@ -155,12 +159,23 @@ export default {
     }
 
     &--left {
-      left: -10rem;
       left: -5rem;
 
     }
     &--right {
       right: -5rem;
+    }
+    @include respond(phone) {
+      top: 20%;   
+      &:hover {
+        color: $color-gray-med;
+      }
+      &--left {
+        left: 5rem;
+      }
+      &--right {
+        right: 5rem;
+      }
     }
   }
 
@@ -168,6 +183,11 @@ export default {
     flex: 2;
     display: flex;
     flex-direction: column;
+
+    @include respond(phone) {
+      flex: initial;
+    }
+
   }
   &__image {
     display: flex;
@@ -180,9 +200,16 @@ export default {
       img {
         width: 100%;
         max-height: 50vh;
+
+      @include respond(phone) {
+        max-height: 30vh;
+        width: auto;
+      }
+        
       }
     }
     &--thumb {
+      align-items: center;
       &:not(:last-child) {
         margin-right: 2rem;
       }
@@ -190,6 +217,14 @@ export default {
         height: 9rem;
         width: 9rem;
         object-fit: cover;
+
+        @include respond(phone) {
+          height: 100%;
+          width: auto;
+          // height: auto;
+          // width: 100%;
+          max-height:100%;
+        }
       }
     }
   }
@@ -201,6 +236,9 @@ export default {
     display: flex;
     justify-content: center;
     padding-bottom: 3rem;
+    @include respond(phone) {
+      display: none;
+    }
 
     img {
       cursor: pointer;
@@ -214,21 +252,43 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
+
+    @include respond(phone) {
+      margin-left: 0;
+      align-items: center;
+    }
   }
   &__name {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    // margin-left: -2rem;
+
+    @include respond(phone) {
+      text-align: center;
+    }
   }
   &__price {
     color: $color-red;
     font-size: 1.8rem;
     font-weight: 600;
     margin-bottom: 1rem;
+
+    @include respond(phone) {
+      text-align: center;
+    }
   }
  
   &__description {
     min-height: 8rem;
+
+    @include respond(phone) {
+      padding: 0 3rem;
+      text-align: center;
+      min-height: 5rem;
+      max-height: 5rem;
+      overflow-y: scroll;
+      font-size: 1.5rem;
+    }
   }
  
   &__loading {

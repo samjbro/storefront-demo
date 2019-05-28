@@ -15,7 +15,7 @@ type Mutation {
   updateCart (data: UpdateCartInput!): CartItem!
   removeCartItem (item_id: Int!): Boolean
   addCustomerAddress (data: AddAddressInput!): Customer!
-  createOrder (data: CreateOrderInput!): Int!
+  createOrder (data: CreateOrderInput!): [CartItem!]!
 }
 
 type Customer {

@@ -116,7 +116,9 @@ const ADD_CUSTOMER_ADDRESS = gql`
 
 const CREATE_ORDER = gql`
   mutation createOrder($data: CreateOrderInput!) {
-    createOrder(data: $data)
+    createOrder(data: $data) {
+      item_id
+    }
   }
 `
 

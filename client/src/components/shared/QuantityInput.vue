@@ -58,6 +58,7 @@ export default {
     border: 1px solid $color-gray-light;
     font-weight: 600;
     font-size: 1.4rem;
+    background-color: $color-white;
   }
 
 }

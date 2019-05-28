@@ -62,6 +62,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  width: 100%;
   &__header {
     font-size: 2rem;
     font-weight: 600;

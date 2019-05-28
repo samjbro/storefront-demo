@@ -112,6 +112,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~#/abstracts/mixins";
 .product-cards {
   // background: red;
   display: flex;
@@ -142,6 +143,10 @@ export default {
     grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
     justify-content: center;
     // overflow: auto;
+
+    @include respond(phone) {
+      grid-template-columns: 90%;
+    }
 
     &--transitioning {
       &-left {

@@ -78,7 +78,7 @@
     </div>
     <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="settingAddress">
       <template v-slot:submitText>
-        <span>Pay</span>
+        <span>Next</span>
       </template>
     </CheckoutButtons>
   </div>
@@ -198,11 +198,12 @@ export default {
 <style lang="scss">
 @import "~#/abstracts/variables";
 @import "~#/abstracts/animations";
+@import "~#/abstracts/mixins";
 .delivery-form {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   &__options {
     background-color: $color-off-white;
     border: 1px solid $color-gray-light;
@@ -214,6 +215,10 @@ export default {
     display: flex;
     margin-bottom: 1rem;
     align-items: center;
+
+    @include respond(phone) {
+      flex-direction: column;
+    }
 
     &--region {
       color: $color-gray-med;
@@ -228,6 +233,9 @@ export default {
 
     &:not(:last-child) {
       margin-right: 1rem;
+       @include respond(phone) {
+         margin-right: 0;
+       }
     }
 
     label {
@@ -273,6 +281,9 @@ export default {
     display: flex;
     margin-left: 2rem;
     align-content: center;
+    @include respond(phone) {
+      margin-left: 0;
+    }
     h3 {
       vertical-align: middle;
       display: flex;
@@ -285,6 +296,9 @@ export default {
     padding: .5rem .8rem;
     border: 1px solid $color-gray-med;
     cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
 
     &--selected {
       color: $color-white;
@@ -304,9 +318,9 @@ export default {
     font-weight: 600;
     justify-content: center;
     color: $color-red;
+    min-height: 2rem;
   }
   &__shipping {
-    min-height: 8rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -317,7 +331,10 @@ export default {
     margin-left: 2rem;
     padding: .7rem 1.5rem;
     min-width: 22rem;
-    min-height: 10rem;
+    min-height: 8rem;
+    @include respond(phone) {
+      align-items: center;
+    }
 
     h3 {
       font-size: 1.5rem;

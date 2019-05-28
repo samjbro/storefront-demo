@@ -176,10 +176,11 @@ export default {
 <style lang="scss">
 @import "~#/abstracts/variables";
 .shopping-cart {
-  min-width: 85vw;
-  max-height: 90vh;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  // background: red;
+  height: 100%;
 
   &__header {
     font-size: 2.2rem;

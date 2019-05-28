@@ -1,6 +1,7 @@
 .button {
   background-color: $color-red;
   border-radius: 5rem;
+  border-style: none;
   color: #fff;
   padding: 1.5rem;
   width: 75%;
@@ -12,6 +13,9 @@
   outline: none;
   text-align: center;
   max-width: 15rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     transform: scale(1.05);

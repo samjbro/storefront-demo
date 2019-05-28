@@ -70,6 +70,7 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .product-card {
   display: flex;
   flex-direction: column;
@@ -83,6 +84,12 @@ export default {
   cursor: pointer;
   transition: all .3s;
 
+  @include respond(phone) {
+    font-size: 3rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
   &:hover {
     transform: translateY(-.7rem);
     box-shadow: 0 .4rem .8rem 0 $color-gray-med; 
@@ -92,6 +99,9 @@ export default {
     width: 18rem;
     height: 17rem;
     margin-bottom: 2rem;
+    @include respond(phone) {
+      width: 20rem;    
+    }
 
     &--loading {
       display: flex;

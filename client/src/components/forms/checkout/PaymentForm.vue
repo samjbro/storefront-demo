@@ -56,7 +56,7 @@
         </div>
       </div>
     </div>
-    <CheckoutButtons @submit="submit" @cancel="cancel">
+    <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="submitting">
       <template v-slot:submitText>
         <span>Pay</span>
       </template>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { CREATE_ORDER, GET_SHIPPING_TYPE } from '@/apollo/operations'
+import { CREATE_ORDER, GET_SHIPPING_TYPE, GET_CURRENT_CUSTOMER } from '@/apollo/operations'
 import hasCartTotal from './hasCartTotal'
 import CheckoutButtons from './CheckoutButtons'
 
@@ -80,12 +80,14 @@ export default {
         cardNumber: '4242424242424242',
         CVC: '123',
         expiryDate: '2020-12'
-      }
+      },
+      submitting: 0
     }
   },
   methods: {
     async submit () {
       try {
+        this.submitting++
         await this.$apollo.mutate({
           mutation: CREATE_ORDER,
           variables: {
@@ -94,10 +96,18 @@ export default {
                 shippingId: this.shippingType.shipping_id,
                 cardData: this.cardData
             }
+          },
+          update: (cache, { data: { createOrder }}) => {
+            this.currentCustomer.cart.items = createOrder
+            cache.writeQuery({ query: GET_CURRENT_CUSTOMER, data: {
+              currentCustomer: this.currentCustomer
+            }})
           }
         })
+        this.submitting--
         this.$emit('submit')
       } catch (e) {
+        this.submitting--
         console.log(e)
       }
     },
@@ -120,6 +130,7 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .payment-form {
   &__content {
     display: flex;
@@ -145,6 +156,10 @@ export default {
 
     justify-content: center;
     margin-bottom: 3rem;
+
+    @include respond(phone) {
+      max-width: 50%;
+    }
   }
   &__method-images {
     display: flex;

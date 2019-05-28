@@ -4,6 +4,7 @@
     <transition name="main-overlay__panel--transitioning">
     <div 
       class="main-overlay__panel"
+      :class="[isLarge ? 'main-overlay__panel--large' : 'main-overlay__panel--small']"
       v-if="overlay.showing"
       >
   <!-- v-on-clickaway="close"
@@ -38,11 +39,23 @@ import CheckoutView from '@/components/forms/checkout/CheckoutView'
 export default {
   mixins: [clickaway],
   components: { RegisterForm, LoginForm, ContactForm, ProductView, ShoppingCart, CheckoutView },
+  data () {
+    return {
+      largeViews: [
+        'product', 'cart', 'checkout'
+      ]
+    }
+  },
   methods: {
     close (){
       this.$apollo.mutate({
         mutation: CLOSE_OVERLAY
       })
+    }
+  },
+  computed: {
+    isLarge () {
+      return this.largeViews.includes(this.overlay.view)
     }
   },
   apollo: {
@@ -57,6 +70,7 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .main-overlay {
   background-color: rgba(0,0,0, .8);
   position: fixed;
@@ -67,6 +81,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 
   &__panel {
     background: $color-white;
@@ -75,6 +90,16 @@ export default {
     display: flex;
     flex-direction: column;
     box-shadow: 0 2px 1rem #000;
+
+    &--large {
+      width: 90%;
+      height: 85%;
+      
+      @include respond(phone) {
+        width: 100%;
+        height: 100%;
+      }
+    }
 
     &--transitioning {
       &-enter-active,
@@ -86,6 +111,10 @@ export default {
         transform: translateY(-100vh);
       }
     }
+  }
+  &__content {
+    height: 100%;
+    width: 100%;
   }
 
   &__exit {

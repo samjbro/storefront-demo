@@ -1,26 +1,26 @@
 ‰<template>
-  <div class="checkout-form">
-    <h1 class="checkout-form__header">
+  <div class="checkout-view">
+    <h1 class="checkout-view__header">
       Checkout
     </h1>
-    <div class="checkout-form__progress">
+    <div class="checkout-view__progress">
       <ProgressBar :nodes="checkoutNodes" />
     </div>
     <DeliveryForm
-      class="checkout-form__content"
+      class="checkout-view__content"
       v-show="highestNode === -1" 
       @submit="submit(0)" @cancel="cancel(0)"/>
     <ConfirmationPage
-      class="checkout-form__content"
+      class="checkout-view__content"
      v-show="highestNode === 0" 
        @submit="submit(1)" @cancel="cancel(1)" />
     <PaymentForm
-      class="checkout-form__content"
+      class="checkout-view__content"
       v-show="highestNode === 1" 
        @submit="submit(2)" @cancel="cancel(2)" />
     <SuccessPage
-      class="checkout-form__content"
-      v-show="highestNode === 2" 
+      class="checkout-view__content"
+      v-show="highestNode >= 2" 
        @submit="submit(3)" />
   </div>
 </template>
@@ -80,14 +80,11 @@ export default {
 </script>
 
 <style lang="scss">
-.checkout-form {
-  min-width: 90vw;
-  min-height: 70vh;
+.checkout-view {
   height: 100%;
   display: flex;
   flex-direction: column;
   padding: 0 2rem;
-  // justify-content: space-between;
 
   &__header {
     font-size: 1.8rem;

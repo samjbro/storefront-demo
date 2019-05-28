@@ -42,7 +42,7 @@
         <span v-if="addingToCart">
           <fa-icon :icon="['fas', 'spinner']" spin />
         </span>
-        <span v-else-if="productInCart">Already in cart</span>
+        <span v-else-if="productInCart">Item in cart</span>
         <span v-else>Add to cart</span>
       </button>
       <button class="button order-form__cart" @click="currentCustomer ? showOverlay('cart') : showOverlay('login')">
@@ -146,15 +146,33 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .order-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  @include respond(phone) {
+    width: 100vw;
+  }
+
    &__option {
     display: flex;
     margin-bottom: 1.5rem;
+     @include respond(phone) {
+      // justify-content: center;
+       margin-bottom: .5rem;
+     }
   }
   &__subheader {
     color: $color-gray-med;
     font-size: 1.4rem;
     margin-bottom: 1rem;
+    @include respond(phone) {
+      text-align: center;
+      margin-bottom: .2rem;
+      font-size: 1.6rem;
+    }
   }
   &__color {
     position: relative;
@@ -167,9 +185,11 @@ export default {
       height: 100%;
       border-radius: 50%;
       outline: none;
+      border: none;
 
       &:checked {
         border: 1px solid $color-red;
+        background-color: inherit;
       }
     }
     span {
@@ -179,7 +199,6 @@ export default {
       width: 100%;
       height: 100%;
       transform: scale(.6);
-      // z-index: 1;
       border-radius: 50%;
     }
   }
@@ -199,7 +218,8 @@ export default {
       outline: none;
       background-color: $color-gray-light;
       color: $color-black;
-
+      border-radius: 0;
+      border: none;
     }
     &--selected {
       color: $color-white;
@@ -221,10 +241,24 @@ export default {
     }
   }
 
+  &__attribute {
+    display: flex;
+    flex-direction: column;
+      align-items: center;
+     @include respond(phone) {
+     }
+  }
+
   &__actions {
     margin-top: 2.5rem;
     display: flex;
     align-items: center;
+
+    @include respond(phone) {
+      .button {
+        font-size: 1.6rem;
+      }
+    }
 
     & > * {
       &:not(:last-child) {

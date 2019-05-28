@@ -74,7 +74,6 @@ export default {
   },
   addReview: async (parent, { data }, { request }) => {
     try {
-      console.log(request.req.headers['user-key'])
       await axios.post(
         `${endpoint}/products/${data.product_id}/reviews`,
         data,
@@ -180,10 +179,10 @@ export default {
       throw new Error(e)
     }
   },
-  createOrder: async (parent, { data: { shippingId, cartId, cardData } }, { request }) => {
+  createOrder: async (parent, { data: { shippingId, cartId, cardData } }, { request, prisma }) => {
     try {
       const token = await getStripeToken(cardData)
-console.log({token})
+// console.log({token})
       const orderPostResponse = await axios.post(`${endpoint}/orders`,
        {
         shipping_id: shippingId,
@@ -201,20 +200,24 @@ console.log({token})
           'user-key': request.req.headers['user-key']
         }
       })
+
       const totalAmount = orderGetResponse.data.total_amount
 
-      const paymentResponse = await axios.post(`${endpoint}/stripe/charge`, {
-        stripeToken: token.id,
-        order_id: orderId,
-        description: 'Test payment to Stripe',
-        // Convert float into integer
-        amount: parseInt(totalAmount.replace('.', '')),
-        currency: 'GBP'
-      })
+      // Post to the turing API's Stripe payment route is commented out because it doesn't recognise the Stripe-generated token
 
-      console.log({paymentResponse})
+      // const paymentResponse = await axios.post(`${endpoint}/stripe/charge`, {
+      //   stripeToken: token.id,
+      //   order_id: orderId,
+      //   description: 'Test payment to Stripe',
+      //   // Convert float into integer
+      //   amount: parseInt(totalAmount.replace('.', '')),
+      //   currency: 'GBP'
+      // })
 
-      return paymentResponse
+      // console.log({paymentResponse})
+
+      // return paymentResponse
+      return []
     } catch (e) {
       console.log(e)
       console.log(e.response.data.error)

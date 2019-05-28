@@ -13,8 +13,6 @@
       </div>
     </div>
     <div class="main-header__links">
-      <a @click.prevent="">Daily Deals</a>
-      <a @click.prevent="">Sell</a>
       <a @click.prevent="showOverlay('contact')">Help & Contact</a>
     </div>
     <div class="main-header__currency">
