@@ -58,5 +58,7 @@ export default {
   position: relative;
   background-color: $color-off-white;
   overflow: hidden;
+  position: fixed;
+  width: 100vw;
 }
 </style>

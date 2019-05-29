@@ -97,6 +97,9 @@ export default {
   &__user {
     // flex: 1;
     min-width: 15rem;
+    @include respond(phone) {
+      min-width: 0;
+    }
   }
 
   &__links {

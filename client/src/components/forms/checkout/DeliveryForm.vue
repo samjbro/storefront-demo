@@ -130,7 +130,6 @@ export default {
             data: this.deliveryData
           },
           update: (cache, { data: { addCustomerAddress }}) => {
-            console.log({addCustomerAddress})
             cache.writeQuery({ query: GET_CURRENT_CUSTOMER, data: {
               currentCustomer: addCustomerAddress
             }})
@@ -151,7 +150,6 @@ export default {
       this.$emit('cancel')
     },
     updateRegion (region) {
-      console.log({region})
       this.shippingRegion = region
       this.deliveryData.shippingCountry = region.shipping_region
       this.deliveryData.shippingRegionId = region.shipping_region_id
@@ -179,7 +177,7 @@ export default {
           const nameGuess = currentCustomer.name.split(' ')
           if (nameGuess.length > 1) {
             this.deliveryData.firstName = nameGuess.slice(0, -1).join(' ')
-            this.deliveryData.lastName = nameGuess.slice(-1)
+            this.deliveryData.lastName = nameGuess.slice(-1)[0]
           } else {
             this.deliveryData.firstName = nameGuess[0]
           }

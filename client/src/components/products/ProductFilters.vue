@@ -192,9 +192,11 @@ export default {
       align-items: center;
       max-height: 0;
       overflow: hidden;
+      display: none;
       &--expanded {
         padding-top: 1rem;
         max-height: 100%;
+        display: initial;
       }
     }
   }
