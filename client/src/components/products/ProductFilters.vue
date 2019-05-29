@@ -175,8 +175,6 @@ export default {
   &__dropdown-header {
     display: none;
     flex: 1;
-    margin: 0 auto;
-    // margin-bottom: 1rem;
 
     @include respond(phone) {
       display: initial;

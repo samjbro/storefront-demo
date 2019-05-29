@@ -31,6 +31,7 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .success-page {
   // height: 100%;
   
@@ -43,6 +44,10 @@ export default {
     align-items: center;
     flex-direction: column;
     height: 100%;
+
+    @include respond(phone) {
+      max-width: 100%;;
+    }
   }
   &__image {
     margin-bottom: 2rem;
@@ -55,12 +60,20 @@ export default {
     font-family: PlayfairDisplay,serif;
     font-weight: 600;
     margin-bottom: 1rem;
+    @include respond(phone) {
+      font-size: 7rem;
+    }
   }
   &__message {
     line-height: 2rem;
     color: $color-gray-med;
     text-align: center;
     margin-bottom: 1rem;
+    @include respond(phone) {
+      font-size: 2.5rem;
+      width: 100%;
+
+    }
   }
 }
 </style>

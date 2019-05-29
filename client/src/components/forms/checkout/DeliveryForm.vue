@@ -204,12 +204,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  max-height: 100%;
   &__options {
     background-color: $color-off-white;
     border: 1px solid $color-gray-light;
     border-radius: 2px;
     padding: 1rem 3rem;
     margin-bottom: 1rem;
+    overflow-y: scroll;
   }
   &__row {
     display: flex;
@@ -218,6 +220,7 @@ export default {
 
     @include respond(phone) {
       flex-direction: column;
+      margin-bottom: .3rem;
     }
 
     &--region {
@@ -230,6 +233,7 @@ export default {
   }
   &__option {
     flex: 1;
+    width: 100%;
 
     &:not(:last-child) {
       margin-right: 1rem;
@@ -252,10 +256,13 @@ export default {
       }
       width: 100%;
       padding: .5rem 1rem;
-      min-width: 30rem;
+      // min-width: 30rem;
       border-radius: .4rem;
       border: 1px solid $color-gray-light-2;
       font-size: 1.4rem;
+      @include respond(phone) {
+        padding: .2rem 1rem;
+      }
       &::placeholder {
         text-align: center;
       }

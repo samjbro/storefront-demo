@@ -20,9 +20,13 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .quantity-input {
   display: flex;
   height: 3.5rem;
+  @include respond(phone) {
+    height: 2.5rem;
+  }
   & > * {
     &:not(:last-child) {
       margin-right: .5rem;
@@ -40,6 +44,10 @@ export default {
     border: none;
     outline: none;
     cursor: pointer;
+    @include respond(phone) {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
     svg {
       font-size: 1.5rem;
       color: $color-black;
@@ -50,6 +58,9 @@ export default {
   }
   &__indicator {
     width: 5rem;
+    @include respond(phone) {
+      width: 2.5rem;
+    }
     height: 100%;
     display: flex;
     align-items: center;

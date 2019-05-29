@@ -73,6 +73,7 @@ export default {
 
 <style lang="scss">
 @import '~#/abstracts/variables';
+@import '~#/abstracts/mixins';
 .main-header {
   display: flex;
   font-weight: 600;

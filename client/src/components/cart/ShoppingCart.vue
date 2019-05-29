@@ -1,9 +1,9 @@
 <template>
   <div class="shopping-cart">
-    <h1 class="shopping-cart__header">
-      {{ currentCustomer.cart.items.length }} Item{{ currentCustomer.cart.items.length !== 1 ? 's' : ''}} In Your Cart
-    </h1>
     <div class="shopping-cart__content">
+      <h1 class="shopping-cart__header">
+        {{ currentCustomer.cart.items.length }} Item{{ currentCustomer.cart.items.length !== 1 ? 's' : ''}} In Your Cart
+      </h1>
       <div>
         <div class="shopping-cart__row shopping-cart__row--header">
           <div class="shopping-cart__col shopping-cart__col--header shopping-cart__col--item">
@@ -175,6 +175,7 @@ export default {
 
 <style lang="scss">
 @import "~#/abstracts/variables";
+@import "~#/abstracts/mixins";
 .shopping-cart {
   display: flex;
   flex-direction: column;
@@ -193,6 +194,7 @@ export default {
   }
   &__items {
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     height: 100%;
     border-bottom: 1px solid $color-gray-light-2;
     & > * {
@@ -220,6 +222,10 @@ export default {
       display: flex;
       align-items: initial;
       justify-content: flex-start;
+      @include respond(phone) {
+        flex: 2;
+        align-items: center;
+      }
     }
     &--size {
       flex: 1;
@@ -231,7 +237,7 @@ export default {
       font-weight: 600;
     }
     &--quantity {
-      flex: 2
+      flex: 2;
     }
     &--header {
       font-size: 1.3rem;
@@ -249,10 +255,11 @@ export default {
 
   &__buttons {
     display: flex;
+    flex-shrink: 0;
 
     & > * {
       &:not(:last-child) {
-        margin-right: 2rem;
+        // margin-right: 2rem;
       }
     }
   }
@@ -260,6 +267,10 @@ export default {
   &__name-image {
     margin-right: 2rem;
     max-height: 10rem;
+    @include respond(phone) {
+      max-height: 6rem;
+      margin-right: 1rem;
+    }
   }
   &__name-info {
     padding: 1rem 0;

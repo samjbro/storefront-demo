@@ -5,6 +5,7 @@ import {} from '@fortawesome/free-regular-svg-icons'
 import { 
   faAngleLeft,
   faAngleRight,
+  faBars,
   faMinus,
   faPlus,
   faSpinner
@@ -13,6 +14,7 @@ import {
 library.add(
   faAngleLeft,
   faAngleRight,
+  faBars,
   faMinus,
   faPlus,
   faSpinner

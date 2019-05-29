@@ -1,7 +1,7 @@
 <template>
   <div class="payment-form">
     <div class="payment-form__content">
-      <div class="payment-form__col">
+      <div class="payment-form__row">
         <div class="payment-form__method">
           <div class="payment-form__method-images">
             <img src="~img/visa.svg" alt="visa">
@@ -12,11 +12,27 @@
             <label for="visa">Pay {{ formatPrice(cartTotal) }} with credit card</label>
           </div>
         </div>
+        <div class="payment-form__method">
+          <div class="payment-form__method-images">
+            <img src="~img/PayPal.svg" alt="PayPal">
+          </div>
+          <div class="payment-form__method-selection">
+            <input type="radio" id="paypal" disabled>
+            <label for="paypal">Pay {{ formatPrice(cartTotal) }} with PayPal (coming soon)</label>
+          </div>
+        </div>
+      </div>
+      <div class="payment-form__row">
+
         <div class="payment-form__inputs">
           <div class="payment-form__input-row">
             <div class="payment-form__input">
               <label for="name">Cardholder's Name</label>
               <input type="text" id="name" :model="cardData.cardholderName" :value="cardData.cardholderName" disabled>
+            </div>
+            <div class="payment-form__input">
+              <label for="number">Card Number</label>
+              <input type="password" id="number" :model="cardData.cardNumber" :value="cardData.cardNumber" disabled>
             </div>
           </div>
           <div class="payment-form__input-row">
@@ -28,27 +44,6 @@
               <label for="cvc">CVV / CVC *</label>
               <input type="number" :model="cardData.CVC" :value="cardData.CVC" disabled>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="payment-form__col">
-        <div class="payment-form__method">
-          <div class="payment-form__method-images">
-            <img src="~img/PayPal.svg" alt="PayPal">
-          </div>
-          <div class="payment-form__method-selection">
-            <input type="radio" id="paypal" disabled>
-            <label for="paypal">Pay {{ formatPrice(cartTotal) }} with PayPal (coming soon)</label>
-          </div>
-        </div>
-        <div class="payment-form__inputs">
-          <div class="payment-form__input-row">
-            <div class="payment-form__input">
-              <label for="number">Card Number</label>
-              <input type="password" id="number" :model="cardData.cardNumber" :value="cardData.cardNumber" disabled>
-            </div>
-          </div>
-          <div class="payment-form__input-row">
             <div class="payment-form__description">
               * CVV or CVC is the card security code, unique three digits number on the back of your card separate from its number.
             </div>
@@ -56,7 +51,7 @@
         </div>
       </div>
     </div>
-    <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="submitting">
+    <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="submitting" class="payment-form__buttons">
       <template v-slot:submitText>
         <span>Pay</span>
       </template>
@@ -132,17 +127,12 @@ export default {
 @import "~#/abstracts/variables";
 @import "~#/abstracts/mixins";
 .payment-form {
+  $center-margin-width: 2rem;
   &__content {
     display: flex;
-    flex: 1;
-  }
-  &__col {
-    flex: 1;
-    display: flex;
     flex-direction: column;
-    &:not(:last-child) {
-      margin-right: 2.5rem;
-    }
+    justify-content: space-evenly;
+    flex: 1;
   }
   &__method {
     flex: 1;
@@ -157,14 +147,23 @@ export default {
     justify-content: center;
     margin-bottom: 3rem;
 
+    &:not(:last-child) {
+      margin-right: $center-margin-width;
+    }
+
     @include respond(phone) {
       max-width: 50%;
+      margin-bottom: 1rem;
     }
   }
   &__method-images {
     display: flex;
     align-items: center;
     margin-bottom: 2.5rem;
+
+    @include respond(phone) {
+      margin-bottom: 1.5rem;
+    }
 
     img {
       &:not(:last-child) {
@@ -213,6 +212,10 @@ export default {
       border-radius: .4rem;
       border: 1px solid $color-gray-light-2;
       font-size: 1.4rem;
+
+      &[type=month] {
+        width: 100%;
+      }
     }
     
     &--missing {
@@ -225,6 +228,9 @@ export default {
     flex: 1;
     display: flex;
     align-items: center;
+    @include respond(phone) {
+      display: block;
+    }
   }
   &__inputs {
     flex: 2;
@@ -234,6 +240,17 @@ export default {
   }
   &__description {
     margin-top: 1.5rem;
+    max-width: 49%;
+    @include respond(phone) {
+      max-width: 100%;
+    }
+  }
+  &__row {
+    display: flex;
+    justify-content: center;
+  }
+  &__buttons {
+    flex-shrink:0;
   }
 }
 </style>
