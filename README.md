@@ -1,4 +1,4 @@
-# Full Stack E-Commerce Demo Application
+# [Full Stack E-Commerce Demo Application](http://turing.sjbroughton.com)  
 A storefront for a fictional T-Shirt shop. The front-end is built using VueJS, using SCSS with BEM methodology for responsive styling, and Apollo GraphQL for local state management as well as performing API requests. The back-end is a NodeJS + Express service which acts as a GraphQL wrapper for a REST API supplied by Turing. Where necessary, the GraphQL API uses a Prisma service to communicate with a secondary supplemental database. The application uses an NGINX service as a reverse proxy. All services are containerized with Docker, and Docker-Compose is used for development container orchestration, while TravisCI is used for Continuous Integration and Deployment to several Heroku-hosted applications.  
 
 ## Technologies Used
