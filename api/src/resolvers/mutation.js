@@ -181,8 +181,12 @@ export default {
   },
   createOrder: async (parent, { data: { shippingId, cartId, cardData } }, { request, prisma }) => {
     try {
+      const cartResponse = await axios.get(`${endpoint}/shoppingcart/${cartId}`)
+      console.log(cartResponse)
+      // If the cart is empty, don't submit an order (or the Turing API will hang forever)
+      if (cartResponse.data.length === 0) throw new Error('Cart is empty')
       const token = await getStripeToken(cardData)
-// console.log({token})
+
       const orderPostResponse = await axios.post(`${endpoint}/orders`,
        {
         shipping_id: shippingId,

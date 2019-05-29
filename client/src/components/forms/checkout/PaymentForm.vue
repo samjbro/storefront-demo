@@ -1,5 +1,5 @@
 <template>
-  <div class="payment-form">
+  <div class="payment-form" :class="{'payment-form--failed': error}">
     <div class="payment-form__content">
       <div class="payment-form__row">
         <div class="payment-form__method">
@@ -50,6 +50,9 @@
           </div>
         </div>
       </div>
+      <div class="payment-form__error">
+        {{ error }}
+      </div>
     </div>
     <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="submitting" class="payment-form__buttons">
       <template v-slot:submitText>
@@ -76,7 +79,8 @@ export default {
         CVC: '123',
         expiryDate: '2020-12'
       },
-      submitting: 0
+      submitting: 0,
+      error: null
     }
   },
   methods: {
@@ -103,6 +107,10 @@ export default {
         this.$emit('submit')
       } catch (e) {
         this.submitting--
+        this.error = e.message
+        setTimeout(() => {
+          this.error = null
+        }, 2000)
         console.log(e)
       }
     },
@@ -126,6 +134,7 @@ export default {
 <style lang="scss">
 @import "~#/abstracts/variables";
 @import "~#/abstracts/mixins";
+@import "~#/abstracts/animations";
 .payment-form {
   $center-margin-width: 2rem;
   &__content {
@@ -251,6 +260,14 @@ export default {
   }
   &__buttons {
     flex-shrink:0;
+  }
+  &__error {
+    min-height: 3rem;
+    color: $color-red;
+    text-align: center;
+  }
+  &--failed {
+    animation: shake .5s;
   }
 }
 </style>

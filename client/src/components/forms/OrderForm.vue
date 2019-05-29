@@ -244,8 +244,8 @@ export default {
   &__attribute {
     display: flex;
     flex-direction: column;
-      align-items: center;
      @include respond(phone) {
+      align-items: center;
      }
   }
 
