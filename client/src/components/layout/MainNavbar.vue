@@ -84,22 +84,6 @@ export default {
           data: {
             department_id: parseInt(id)
           }
-        },
-        update: (cache, { data: { setSearchTerms } }) => {
-          // const department = this.departments.find(
-          //   dept =>
-          //     parseInt(dept.department_id) === setSearchTerms.department_id
-          // );
-          // let categories
-          // if (!department) {
-          //   categories =
-          // }
-          // const categories =
-          // cache.writeData({
-          //   data: {
-          //     categories: department.categories
-          //   }
-          // });
         }
       });
     }
