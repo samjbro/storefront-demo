@@ -36,6 +36,7 @@ const GET_PRODUCTS = gql `
         product_id
         name
         price
+        discounted_price
         thumbnail
         locations {
           department {
@@ -57,7 +58,7 @@ const GET_PRODUCT = gql `
       name
       description
       price
-      # discounted_price
+      discounted_price
       image
       image_2
       attributes {
@@ -82,7 +83,7 @@ const GET_CURRENT_PRODUCT = gql `
       name
       description
       price
-      #discounted_price
+      discounted_price
       image
       image_2
       attributes {
