@@ -27,8 +27,8 @@ export default {
   components: { FormTemplate },
   data () {
     return {
-      email: 'test999@turing.com',
-      password: 'valid1234',
+      email: 'testuser@email.com',
+      password: '123123',
       // email: '',
       // password: '',
       remember: false

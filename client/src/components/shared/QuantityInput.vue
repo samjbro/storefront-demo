@@ -1,11 +1,11 @@
 <template>
-  <div class="quantity-input">
-    <button class="quantity-input__increment" @click="$emit('increment', -1)">
-      <fa-icon :icon="['fas', 'minus']" />
+  <div class="quantity-input" :class="{'quantity-input--disabled': disabled}">
+    <button class="quantity-input__increment" @click="!disabled && $emit('increment', -1)">
+      <fa-icon :icon="['fas', 'minus']"/>
     </button>
     <div class="quantity-input__indicator">{{ quantity }}</div>
-    <button class="quantity-input__increment" @click="$emit('increment', 1)">
-      <fa-icon :icon="['fas', 'plus']" />
+    <button class="quantity-input__increment" @click="!disabled && $emit('increment', 1)">
+      <fa-icon :icon="['fas', 'plus']"/>
     </button>
   </div>
 </template>
@@ -13,9 +13,10 @@
 <script>
 export default {
   props: {
-    quantity: Number
+    quantity: Number,
+    disabled: Boolean
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -24,12 +25,18 @@ export default {
 .quantity-input {
   display: flex;
   height: 3.5rem;
+  &--disabled {
+    * {
+      color: $color-gray-med;
+      cursor: initial !important;
+    }
+  }
   @include respond(phone) {
     height: 2.5rem;
   }
   & > * {
     &:not(:last-child) {
-      margin-right: .5rem;
+      margin-right: 0.5rem;
     }
   }
   &__increment {
@@ -71,6 +78,5 @@ export default {
     font-size: 1.4rem;
     background-color: $color-white;
   }
-
 }
 </style>

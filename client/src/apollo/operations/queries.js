@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import fragments from './fragments'
 
-const GET_ME = gql`
+const GET_ME = gql `
   query getMe {
     me {
       ...customerInfo
@@ -10,7 +10,7 @@ const GET_ME = gql`
   ${fragments.customerInfo}
 `
 
-const GET_CURRENT_CUSTOMER = gql`
+const GET_CURRENT_CUSTOMER = gql `
   query getCurrentCustomer {
     currentCustomer @client {
       ...customerInfo
@@ -19,7 +19,7 @@ const GET_CURRENT_CUSTOMER = gql`
   ${fragments.customerInfo}
 `
 
-const GET_OVERLAY = gql`
+const GET_OVERLAY = gql `
   query getOverlay {
     overlay @client {
       showing
@@ -28,7 +28,7 @@ const GET_OVERLAY = gql`
   }
 `
 
-const GET_PRODUCTS = gql`
+const GET_PRODUCTS = gql `
   query getProducts($data: ProductSearchFields!) {
     products(data: $data) {
       count
@@ -37,12 +37,20 @@ const GET_PRODUCTS = gql`
         name
         price
         thumbnail
+        locations {
+          department {
+            department_id
+          }
+          category {
+            category_id
+          }
+        }
       }
     }
   }
 `
 
-const GET_PRODUCT = gql`
+const GET_PRODUCT = gql `
   query getProduct($id: String!) {
     product (id: $id) {
       product_id
@@ -67,7 +75,7 @@ const GET_PRODUCT = gql`
   }
 `
 
-const GET_CURRENT_PRODUCT = gql`
+const GET_CURRENT_PRODUCT = gql `
   query getCurrentProduct {
     currentProduct @client {
       product_id
@@ -92,7 +100,7 @@ const GET_CURRENT_PRODUCT = gql`
   }
 `
 
-const GET_SEARCH_TERMS = gql`
+const GET_SEARCH_TERMS = gql `
   query getSearchTerms {
     searchTerms @client {
       page
@@ -104,17 +112,22 @@ const GET_SEARCH_TERMS = gql`
   }
 `
 
-const GET_DEPARTMENTS = gql`
+const GET_DEPARTMENTS = gql `
   query getDepartments {
     departments {
       department_id
       name
       description
+      categories {
+        category_id
+        name
+        description
+      }
     }
   }
 `
 
-const GET_CATEGORIES = gql`
+const GET_CATEGORIES = gql `
   query getCategories {
     categories {
       category_id
@@ -124,7 +137,7 @@ const GET_CATEGORIES = gql`
   }
 `
 
-const GET_SHIPPING_REGIONS = gql`
+const GET_SHIPPING_REGIONS = gql `
   query getShippingRegions {
     shippingRegions {
       shipping_region_id
@@ -138,7 +151,7 @@ const GET_SHIPPING_REGIONS = gql`
   }
 `
 
-const GET_SHIPPING_TYPE = gql`
+const GET_SHIPPING_TYPE = gql `
   query getShippingType {
     shippingType @client {
       shipping_id
@@ -150,4 +163,16 @@ const GET_SHIPPING_TYPE = gql`
 
 
 
-export { GET_ME, GET_CURRENT_CUSTOMER, GET_OVERLAY, GET_PRODUCTS, GET_PRODUCT, GET_CURRENT_PRODUCT, GET_SEARCH_TERMS, GET_DEPARTMENTS, GET_CATEGORIES, GET_SHIPPING_REGIONS, GET_SHIPPING_TYPE }
+export {
+  GET_ME,
+  GET_CURRENT_CUSTOMER,
+  GET_OVERLAY,
+  GET_PRODUCTS,
+  GET_PRODUCT,
+  GET_CURRENT_PRODUCT,
+  GET_SEARCH_TERMS,
+  GET_DEPARTMENTS,
+  GET_CATEGORIES,
+  GET_SHIPPING_REGIONS,
+  GET_SHIPPING_TYPE
+}

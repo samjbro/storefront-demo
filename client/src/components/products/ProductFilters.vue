@@ -2,40 +2,42 @@
   <div class="product-filters">
     <div class="product-filters__panel">
       <div class="product-filters__item-info">
-        <h1 class="product-filters__title">
-          Showing {{ products && products.count }} items
-        </h1>
+        <h1 class="product-filters__title">Showing {{ productCount }} items</h1>
         <div class="product-filters__limit">
           <label for="limit">Products per page:</label>
-          <QuantityInput :quantity="limit" @increment="direction => updateLimit(direction)" />
+          <QuantityInput
+            :quantity="showingAllProducts ? 99 : limit"
+            @increment="direction => updateLimit(direction)"
+            :disabled="!!showingAllProducts"
+          />
         </div>
       </div>
       <div class="product-filters__filters">
         <div class="product-filters__dropdown-header">
-          <a class="button" @click="expanded = !expanded">
-            {{ expanded ? 'Hide Filters' : 'Show Filters' }}
-          </a>
+          <a
+            class="button"
+            @click="expanded = !expanded"
+          >{{ expanded ? 'Hide Filters' : 'Show Filters' }}</a>
         </div>
-        <div class="product-filters__categories" :class="{'product-filters__categories--expanded': expanded}">
-          <div class="product-filters__header">
-            Category
-          </div>
+        <div
+          class="product-filters__categories"
+          :class="{'product-filters__categories--expanded': expanded}"
+        >
+          <div class="product-filters__header">Category</div>
           <div class="product-filters__options">
-            <a 
+            <a
               class="product-filters__link"
               :class="{'product-filters__link--active': searchTerms.category_id === 0}"
               :key="0"
-              @click.prevent="filter({category_id: 0})">
-              All Categories
-            </a>
-            <a 
-              v-for="category in categories" 
+              @click.prevent="filter({category_id: 0})"
+            >All Categories</a>
+            <a
+              v-for="category in validCategories"
               class="product-filters__link"
               :class="{'product-filters__link--active': searchTerms.category_id == category.category_id}"
               :key="category.category_id"
-              @click.prevent="filter({category_id: parseInt(category.category_id)})">
-              {{ category.name }}
-            </a>
+              @click.prevent="filter({category_id: parseInt(category.category_id)})"
+            >{{ category.name }}</a>
           </div>
         </div>
       </div>
@@ -44,23 +46,46 @@
 </template>
 
 <script>
-import { GET_SEARCH_TERMS, SET_SEARCH_TERMS, GET_CATEGORIES, GET_PRODUCTS } from '@/apollo/operations'
-import QuantityInput from '@/components/shared/QuantityInput'
+import {
+  GET_SEARCH_TERMS,
+  SET_SEARCH_TERMS,
+  GET_CATEGORIES,
+  GET_PRODUCTS,
+  GET_DEPARTMENTS
+} from "@/apollo/operations";
+import QuantityInput from "@/components/shared/QuantityInput";
 export default {
   components: { QuantityInput },
-  data () {
+  data() {
     return {
       limit: 0,
       expanded: false
+    };
+  },
+  computed: {
+    validCategories() {
+      if (this.searchTerms.department_id === 0) return this.categories;
+      const department = this.departments.find(dept => {
+        return parseInt(dept.department_id) === this.searchTerms.department_id;
+      });
+      return department.categories;
+    },
+    productCount() {
+      if (!this.products) return 0;
+      if (this.showingAllProducts) return "all";
+      return this.products.count;
+    },
+    showingAllProducts() {
+      return this.searchTerms.department_id && this.searchTerms.category_id;
     }
   },
   methods: {
-    updateLimit (direction) {
-      if (this.limit + direction < 1) return
-      this.limit += direction
-      this.filter(this.searchTerms)
+    updateLimit(direction) {
+      if (this.limit + direction < 1) return;
+      this.limit += direction;
+      this.filter(this.searchTerms);
     },
-    filter (terms) {
+    filter(terms) {
       this.$apollo.mutate({
         mutation: SET_SEARCH_TERMS,
         variables: {
@@ -70,38 +95,43 @@ export default {
             limit: parseInt(this.limit)
           }
         }
-      })
+      });
     }
   },
   apollo: {
-    searchTerms () {
+    searchTerms() {
       return {
         query: GET_SEARCH_TERMS,
-        result ({data: { searchTerms }}) {
-          this.limit = searchTerms.limit
+        result({ data: { searchTerms } }) {
+          this.limit = searchTerms.limit;
         }
-      }
+      };
     },
-    categories () {
+    departments() {
+      return {
+        query: GET_DEPARTMENTS
+      };
+    },
+    categories() {
       return {
         query: GET_CATEGORIES
-      }
+      };
     },
-    products () {
+    products() {
       return {
         query: GET_PRODUCTS,
-        variables () {
+        variables() {
           return {
             data: {
               ...this.searchTerms,
               __typename: undefined
             }
-          }
+          };
         }
-      }
+      };
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -116,7 +146,7 @@ export default {
   }
 
   &__panel {
-    box-shadow: 0 .2rem .4rem 0 $color-gray-med; 
+    box-shadow: 0 0.2rem 0.4rem 0 $color-gray-med;
     background-color: $color-off-white;
     & > * {
       padding: 1rem 1.5rem;
@@ -146,7 +176,6 @@ export default {
     @include respond(phone) {
       margin: 0;
     }
-
   }
 
   &__limit {
@@ -162,7 +191,7 @@ export default {
   &__header {
     font-weight: 600;
     color: $color-gray-med;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     @include respond(phone) {
       font-size: 2rem;
     }
@@ -181,7 +210,7 @@ export default {
     }
     .button {
       font-size: 2rem;
-      padding: .5rem .8rem;  
+      padding: 0.5rem 0.8rem;
     }
   }
 
@@ -209,7 +238,7 @@ export default {
       font-weight: 600;
       font-size: 2rem;
       display: grid;
-      grid-gap: .5rem;
+      grid-gap: 0.5rem;
       grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
     }
   }
