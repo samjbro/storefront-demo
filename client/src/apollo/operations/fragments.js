@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-const fullCart = gql`
+const fullCart = gql `
 fragment fullCart on Cart {
   cart_id
   items {
@@ -18,7 +18,7 @@ fragment fullCart on Cart {
 }
 `
 
-const customerInfo = gql`
+const customerInfo = gql `
   fragment customerInfo on Customer {
       customer_id
       name

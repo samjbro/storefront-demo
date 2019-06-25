@@ -1,13 +1,13 @@
 <template>
   <div class="product-view">
     <div class="product-view__loading" v-if="isLoading || !currentProduct">
-      <fa-icon :icon="['fas', 'spinner']" spin />
+      <fa-icon :icon="['fas', 'spinner']" spin/>
     </div>
     <div class="product-view__arrow product-view__arrow--left" @click="getProduct(-1)">
-      <fa-icon :icon="['fas', 'angle-left']" />
+      <fa-icon :icon="['fas', 'angle-left']"/>
     </div>
     <div class="product-view__arrow product-view__arrow--right" @click="getProduct(1)">
-      <fa-icon :icon="['fas', 'angle-right']" />
+      <fa-icon :icon="['fas', 'angle-right']"/>
     </div>
     <template v-if="currentProduct">
       <div class="product-view__images">
@@ -17,25 +17,37 @@
           </div>
         </div>
         <div class="product-view__thumbnails">
-          <div class="product-view__image product-view__image--thumb" @click="currentImage = 'image'">
+          <div
+            class="product-view__image product-view__image--thumb"
+            @click="currentImage = 'image'"
+          >
             <img :src="getImgUrl(currentProduct.image)" :alt="currentProduct.image">
           </div>
-          <div class="product-view__image product-view__image--thumb" @click="currentImage = 'image_2'">
+          <div
+            class="product-view__image product-view__image--thumb"
+            @click="currentImage = 'image_2'"
+          >
             <img :src="getImgUrl(currentProduct.image_2)" :alt="currentProduct.image_2">
           </div>
         </div>
       </div>
       <div class="product-view__info">
         <div class="product-view__header">
-          <h1 class="product-view__name">
-            {{ currentProduct.name }}
-          </h1>
-          <div class="product-view__price">
-            {{ formattedPrice }}
-          </div>
-          <StarRating
-           :rating="averageRating" 
+          <h1 class="product-view__name">{{ currentProduct.name }}</h1>
+          <div
+            class="product-view__price"
+            :class="{
+              'product-view__price--old': discountActive
+            }"
           >
+            <span v-if="discountActive">Was:</span>
+            {{ formatPrice(currentProduct.price) }}
+          </div>
+          <div v-if="discountActive" class="product-view__price">
+            <span>Now:</span>
+            {{ formatPrice(currentProduct.discounted_price) }}
+          </div>
+          <StarRating :rating="averageRating">
             <template v-slot:link>
               <a @click.prevent="toggleReviews">
                 <span v-if="showReviews">Back to the product</span>
@@ -44,17 +56,15 @@
             </template>
           </StarRating>
         </div>
-        <ProductReviews 
-          v-show="showReviews" 
-          class="product-view__reviews" 
-          @toggleReviews="toggleReviews" 
+        <ProductReviews
+          v-show="showReviews"
+          class="product-view__reviews"
+          @toggleReviews="toggleReviews"
           :reviews="currentProduct.reviews"
-          />
+        />
         <div v-show="!showReviews" class="product-view__details">
-          <div class="product-view__description">
-            {{ currentProduct.description }}
-          </div>
-          <OrderForm :product="currentProduct" />
+          <div class="product-view__description">{{ currentProduct.description }}</div>
+          <OrderForm :product="currentProduct"/>
         </div>
       </div>
     </template>
@@ -62,77 +72,87 @@
 </template>
 
 <script>
-import StarRating from '@/components/shared/StarRating'
-import ProductReviews from './ProductReviews'
-import OrderForm from '@/components/forms/OrderForm'
-import { GET_CURRENT_PRODUCT, GET_PRODUCT, SET_CURRENT_PRODUCT } from '@/apollo/operations'
+import StarRating from "@/components/shared/StarRating";
+import ProductReviews from "./ProductReviews";
+import OrderForm from "@/components/forms/OrderForm";
+import {
+  GET_CURRENT_PRODUCT,
+  GET_PRODUCT,
+  SET_CURRENT_PRODUCT
+} from "@/apollo/operations";
 export default {
   components: { StarRating, ProductReviews, OrderForm },
-  data () {
+  data() {
     return {
       isLoading: 0,
-      currentImage: 'image',
+      currentImage: "image",
       showReviews: false
-    }
+    };
   },
   computed: {
-    formattedPrice () {
-      return '£' + this.currentProduct.price
+    discountActive() {
+      return this.currentProduct.discounted_price !== "0.00";
     },
-    validReviews () {
+    validReviews() {
       return this.currentProduct.reviews.filter(review => {
-        return review.rating > -1 && review.rating < 6
-      })
+        return review.rating > -1 && review.rating < 6;
+      });
     },
-    averageRating () {
-      if (!this.validReviews.length) return null
+    averageRating() {
+      if (!this.validReviews.length) return null;
       const total = this.validReviews
         .map(review => review.rating)
-        .reduce((acc, cur) => acc + cur)
-      const average = total / this.validReviews.length
+        .reduce((acc, cur) => acc + cur);
+      const average = total / this.validReviews.length;
       // Getting the nearest half integer
-      return Math.round(average * 2) / 2
+      return Math.round(average * 2) / 2;
     }
   },
   methods: {
-    getImgUrl (img) {
-      return `https://backendapi.turing.com/images/products/${img}`
+    getImgUrl(img) {
+      return `https://backendapi.turing.com/images/products/${img}`;
     },
-    toggleReviews () {
-      this.showReviews = !this.showReviews
+    toggleReviews() {
+      this.showReviews = !this.showReviews;
     },
-    async getProduct (direction) {
-      this.isLoading = true
-      this.showReviews = false
+    formatPrice(price) {
+      if (this.currentProduct.loading) return this.currentProduct.price;
+      return "£" + price;
+    },
+    async getProduct(direction) {
+      this.isLoading = true;
+      this.showReviews = false;
       try {
         const { data } = await this.$apollo.query({
           query: GET_PRODUCT,
           variables: {
-            id: (parseInt(this.currentProduct.product_id) + direction).toString()
+            id: (
+              parseInt(this.currentProduct.product_id) + direction
+            ).toString()
           }
-        })
-        if (!data.product) return
+        });
+        if (!data.product) return;
         this.$apollo.mutate({
           mutation: SET_CURRENT_PRODUCT,
           variables: {
             product: data.product
           }
-        })
+        });
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
-      this.isLoading = false
+      this.isLoading = false;
     }
   },
   apollo: {
-    currentProduct () {
+    currentProduct() {
       return {
         query: GET_CURRENT_PRODUCT,
-        loadingKey: 'isLoading'
-      }
+        loadingKey: "isLoading"
+      };
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -142,7 +162,7 @@ export default {
   display: flex;
   height: 100%;
 
-  @include respond(phone) {     
+  @include respond(phone) {
     flex-direction: column;
   }
 
@@ -160,13 +180,12 @@ export default {
 
     &--left {
       left: -5rem;
-
     }
     &--right {
       right: -5rem;
     }
     @include respond(phone) {
-      top: 20%;   
+      top: 20%;
       &:hover {
         color: $color-gray-med;
       }
@@ -187,7 +206,6 @@ export default {
     @include respond(phone) {
       flex: initial;
     }
-
   }
   &__image {
     display: flex;
@@ -201,11 +219,10 @@ export default {
         width: 100%;
         max-height: 50vh;
 
-      @include respond(phone) {
-        max-height: 30vh;
-        width: auto;
-      }
-        
+        @include respond(phone) {
+          max-height: 30vh;
+          width: auto;
+        }
       }
     }
     &--thumb {
@@ -223,7 +240,7 @@ export default {
           width: auto;
           // height: auto;
           // width: 100%;
-          max-height:100%;
+          max-height: 100%;
         }
       }
     }
@@ -253,7 +270,6 @@ export default {
     flex-direction: column;
     justify-content: space-between;
 
-
     @include respond(phone) {
       margin-left: 0;
       align-items: center;
@@ -272,12 +288,17 @@ export default {
     font-size: 1.8rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    display: inline-block;
 
     @include respond(phone) {
       text-align: center;
     }
+    &--old {
+      transform: scale(0.75);
+      color: $color-gray-med;
+    }
   }
- 
+
   &__description {
     min-height: 8rem;
 
@@ -290,14 +311,14 @@ export default {
       font-size: 1.5rem;
     }
   }
- 
+
   &__loading {
     position: absolute;
     top: 0;
-    left:0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,.75);
+    background: rgba(0, 0, 0, 0.75);
     z-index: 99;
     display: flex;
     justify-content: center;
