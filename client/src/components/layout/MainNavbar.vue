@@ -6,35 +6,34 @@
         <fa-icon :icon="['fas', 'bars']" @click="dropdownExpanded = !dropdownExpanded"/>
       </div>
     </div>
-    <div class="main-navbar__dropdown" :class="{'main-navbar__dropdown--expanded': dropdownExpanded}">
+    <div
+      class="main-navbar__dropdown"
+      :class="{'main-navbar__dropdown--expanded': dropdownExpanded}"
+    >
       <div class="main-navbar__links">
-        <a 
+        <a
           class="main-navbar__link"
           :class="{'main-navbar__link--active': searchTerms.department_id === 0}"
           :key="0"
-          @click.prevent="showDepartment(0)">
-          All
-        </a>
-        <a 
-          v-for="department in departments" 
+          @click.prevent="showDepartment(0)"
+        >All</a>
+        <a
+          v-for="department in departments"
           class="main-navbar__link"
           :class="{'main-navbar__link--active': searchTerms.department_id == department.department_id}"
           :key="department.department_id"
-          @click.prevent="showDepartment(department.department_id)">
-          {{ department.name }}
-        </a>
+          @click.prevent="showDepartment(department.department_id)"
+        >{{ department.name }}</a>
       </div>
       <div class="main-navbar__search">
-        <img src="~img/icons-search-white.png" class="main-navbar__search-icon main-navbar__search-icon--left">
-        <input
-          @input="debouncedInput"
-          type="text"
-          placeholder="search anything"
-          v-model="search" 
-        />
         <img
-          @click="clear" 
-          src="~img/icons-close-small-white.png" 
+          src="~img/icons-search-white.png"
+          class="main-navbar__search-icon main-navbar__search-icon--left"
+        >
+        <input @input="debouncedInput" type="text" placeholder="search anything" v-model="search">
+        <img
+          @click="clear"
+          src="~img/icons-close-small-white.png"
           class="main-navbar__search-icon main-navbar__search-icon--right"
         >
       </div>
@@ -43,22 +42,27 @@
 </template>
 
 <script>
-import { debounce } from '@/utils'
-import { GET_PRODUCTS, GET_SEARCH_TERMS, SET_SEARCH_TERMS, GET_DEPARTMENTS } from '@/apollo/operations'
+import { debounce } from "@/utils";
+import {
+  GET_PRODUCTS,
+  GET_SEARCH_TERMS,
+  SET_SEARCH_TERMS,
+  GET_DEPARTMENTS
+} from "@/apollo/operations";
 export default {
-  data () {
+  data() {
     return {
-      search: '',
+      search: "",
       dropdownExpanded: false,
       debouncedInput: debounce(this.submitSearch, 500)
-    }
+    };
   },
   methods: {
-    clear () {
-      this.search = ''
-      this.submitSearch()
+    clear() {
+      this.search = "";
+      this.submitSearch();
     },
-    async submitSearch () {
+    async submitSearch() {
       const { data } = await this.$apollo.mutate({
         mutation: SET_SEARCH_TERMS,
         variables: {
@@ -67,36 +71,55 @@ export default {
             category_id: 0,
             query_string: this.search
           }
+        },
+        update: (cache, data) => {
+          console.log({ data });
         }
-      })
+      });
     },
-    showDepartment (id) {
+    showDepartment(id) {
       this.$apollo.mutate({
         mutation: SET_SEARCH_TERMS,
         variables: {
-          data:{
+          data: {
             department_id: parseInt(id)
           }
+        },
+        update: (cache, { data: { setSearchTerms } }) => {
+          // const department = this.departments.find(
+          //   dept =>
+          //     parseInt(dept.department_id) === setSearchTerms.department_id
+          // );
+          // let categories
+          // if (!department) {
+          //   categories =
+          // }
+          // const categories =
+          // cache.writeData({
+          //   data: {
+          //     categories: department.categories
+          //   }
+          // });
         }
-      })
+      });
     }
   },
   apollo: {
-    departments () {
+    departments() {
       return {
         query: GET_DEPARTMENTS
-      }
+      };
     },
-    searchTerms () {
+    searchTerms() {
       return {
         query: GET_SEARCH_TERMS,
-        result ({ data: { searchTerms } }) {
-          this.search = searchTerms.query_string
+        result({ data: { searchTerms } }) {
+          this.search = searchTerms.query_string;
         }
-      }
+      };
     }
   }
-}
+};
 </script>
 
 
@@ -143,10 +166,10 @@ export default {
 
     input {
       flex: 1;
-      background: rgba($color-white, .5);
+      background: rgba($color-white, 0.5);
       color: $color-white;
       border: 1px solid $color-gray-light;
-      padding: .7rem 4rem;
+      padding: 0.7rem 4rem;
       font-weight: 600;
       border-radius: 5rem;
       outline: none;
@@ -155,7 +178,6 @@ export default {
       }
       &::placeholder {
         color: $color-white;
-
       }
     }
   }
@@ -195,7 +217,7 @@ export default {
       display: block;
       max-height: 0;
       height: 12rem;
-      transition: max-height .5s;
+      transition: max-height 0.5s;
       &--expanded {
         max-height: 12rem;
       }
