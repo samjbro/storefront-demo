@@ -8,7 +8,13 @@
             <img src="~img/mastercard.svg" alt="mastercard">
           </div>
           <div class="payment-form__method-selection">
-            <input type="radio" id="visa" :model="paymentMethod" :value="paymentMethod" :checked="paymentMethod === 'visa'">
+            <input
+              type="radio"
+              id="visa"
+              v-model="paymentMethod"
+              :value="paymentMethod"
+              :checked="paymentMethod === 'visa'"
+            >
             <label for="visa">Pay {{ formatPrice(cartTotal) }} with credit card</label>
           </div>
         </div>
@@ -23,112 +29,127 @@
         </div>
       </div>
       <div class="payment-form__row">
-
         <div class="payment-form__inputs">
           <div class="payment-form__input-row">
             <div class="payment-form__input">
               <label for="name">Cardholder's Name</label>
-              <input type="text" id="name" :model="cardData.cardholderName" :value="cardData.cardholderName" disabled>
+              <input type="text" id="name" v-model="cardData.cardholderName" required>
             </div>
             <div class="payment-form__input">
               <label for="number">Card Number</label>
-              <input type="password" id="number" :model="cardData.cardNumber" :value="cardData.cardNumber" disabled>
+              <input type="password" id="number" v-model="cardData.cardNumber" required>
             </div>
           </div>
           <div class="payment-form__input-row">
             <div class="payment-form__input">
               <label for="expiration">Valid thru</label>
-              <input type="month" @input="setExpiryDate" :value="cardData.expiryDate" disabled>
+              <input type="string" v-model="cardData.expiryDate" placeholder="MM/YY" required>
             </div>
             <div class="payment-form__input">
               <label for="cvc">CVV / CVC *</label>
-              <input type="number" :model="cardData.CVC" :value="cardData.CVC" disabled>
+              <input type="number" v-model="cardData.CVC" required>
             </div>
-            <div class="payment-form__description">
-              * CVV or CVC is the card security code, unique three digits number on the back of your card separate from its number.
-            </div>
+            <div
+              class="payment-form__description"
+            >* CVV or CVC is the card security code, unique three digits number on the back of your card separate from its number.</div>
           </div>
         </div>
       </div>
-      <div class="payment-form__error">
-        {{ error }}
-      </div>
+      <div class="payment-form__error">{{ error }}</div>
     </div>
-    <CheckoutButtons @submit="submit" @cancel="cancel" :submitting="submitting" class="payment-form__buttons">
+    <CheckoutButtons
+      @submit="submit"
+      @cancel="cancel"
+      :submitting="submitting"
+      class="payment-form__buttons"
+    >
       <template v-slot:submitText>
         <span>Pay</span>
       </template>
     </CheckoutButtons>
-    </div>
+  </div>
 </template>
 
 <script>
-import { CREATE_ORDER, GET_SHIPPING_TYPE, GET_CURRENT_CUSTOMER } from '@/apollo/operations'
-import hasCartTotal from './hasCartTotal'
-import CheckoutButtons from './CheckoutButtons'
+import {
+  CREATE_ORDER,
+  GET_SHIPPING_TYPE,
+  GET_CURRENT_CUSTOMER,
+  GET_NEW_CART
+} from "@/apollo/operations";
+import hasCartTotal from "./hasCartTotal";
+import CheckoutButtons from "./CheckoutButtons";
 
 export default {
   mixins: [hasCartTotal],
   components: { CheckoutButtons },
-  data () {
+  data() {
     return {
-      paymentMethod: 'visa',
+      paymentMethod: "visa",
       cardData: {
-        cardholderName: 'Test User',
-        cardNumber: '4242424242424242',
-        CVC: '123',
-        expiryDate: '2020-12'
+        cardholderName: "",
+        cardNumber: "",
+        CVC: "",
+        expiryDate: ""
       },
       submitting: 0,
       error: null
-    }
+    };
   },
   methods: {
-    async submit () {
+    async submit() {
       try {
-        this.submitting++
+        this.submitting++;
         await this.$apollo.mutate({
           mutation: CREATE_ORDER,
           variables: {
-              data: {
-                cartId: this.currentCustomer.cart.cart_id,
-                shippingId: this.shippingType.shipping_id,
-                cardData: this.cardData
+            data: {
+              cartId: this.currentCustomer.cart.cart_id,
+              shippingId: this.shippingType.shipping_id,
+              cardData: this.cardData
             }
           },
-          update: (cache, { data: { createOrder }}) => {
-            this.currentCustomer.cart.items = createOrder
-            cache.writeQuery({ query: GET_CURRENT_CUSTOMER, data: {
-              currentCustomer: this.currentCustomer
-            }})
+          update: async (cache, { data: { createOrder } }) => {
+            const {
+              data: { getNewCart }
+            } = await this.$apollo.mutate({
+              mutation: GET_NEW_CART,
+              variables: {
+                customerId: this.currentCustomer.customer_id
+              }
+            });
+            this.currentCustomer.cart = getNewCart;
+            cache.writeQuery({
+              query: GET_CURRENT_CUSTOMER,
+              data: {
+                currentCustomer: this.currentCustomer
+              }
+            });
           }
-        })
-        this.submitting--
-        this.$emit('submit')
+        });
+        this.submitting--;
+        this.$emit("submit");
       } catch (e) {
-        this.submitting--
-        this.error = e.message
+        this.submitting--;
+        this.error = e.message;
         setTimeout(() => {
-          this.error = null
-        }, 2000)
-        console.log(e)
+          this.error = null;
+        }, 2000);
+        console.log(e);
       }
     },
-    cancel () {
-      this.$emit('cancel')
-    },
-    setExpiryDate (e) {
-      this.cardData.expiryDate = e.target.value
+    cancel() {
+      this.$emit("cancel");
     }
   },
   apollo: {
-    shippingType () {
+    shippingType() {
       return {
         query: GET_SHIPPING_TYPE
-      }
+      };
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -146,7 +167,7 @@ export default {
   &__method {
     flex: 1;
     border: 1px solid $color-blue;
-    border-radius: .2rem;
+    border-radius: 0.2rem;
     background-color: $color-off-white;
     display: flex;
     flex-direction: column;
@@ -185,7 +206,7 @@ export default {
       font-weight: 600;
     }
     input {
-      margin-right: .7rem;
+      margin-right: 0.7rem;
     }
   }
 
@@ -208,28 +229,28 @@ export default {
       color: $color-gray-med;
       font-weight: 600;
       font-size: 1.2rem;
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
     }
-        
+
     input {
       &:not(:last-child) {
-        margin-bottom: .8rem;
+        margin-bottom: 0.8rem;
       }
       // width: 100%;
       padding: 1.2rem 2rem;
       // min-width: 30rem;
-      border-radius: .4rem;
+      border-radius: 0.4rem;
       border: 1px solid $color-gray-light-2;
       font-size: 1.4rem;
 
-      &[type=month] {
+      &[type="month"] {
         width: 100%;
       }
     }
-    
+
     &--missing {
       input {
-        background-color: rgba($color-red, .2);
+        background-color: rgba($color-red, 0.2);
       }
     }
   }
@@ -259,7 +280,7 @@ export default {
     justify-content: center;
   }
   &__buttons {
-    flex-shrink:0;
+    flex-shrink: 0;
   }
   &__error {
     min-height: 3rem;
@@ -267,7 +288,7 @@ export default {
     text-align: center;
   }
   &--failed {
-    animation: shake .5s;
+    animation: shake 0.5s;
   }
 }
 </style>

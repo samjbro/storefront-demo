@@ -117,7 +117,7 @@ const ADD_CUSTOMER_ADDRESS = gql `
 const CREATE_ORDER = gql `
   mutation createOrder($data: CreateOrderInput!) {
     createOrder(data: $data) {
-      item_id
+      id
     }
   }
 `
@@ -125,6 +125,17 @@ const CREATE_ORDER = gql `
 const SET_SHIPPING_TYPE = gql `
   mutation setShippingType($shippingType: ShippingType!) {
     setShippingType(shippingType: $shippingType) @client
+  }
+`
+
+const GET_NEW_CART = gql `
+  mutation getNewCart($customerId: String) {
+    getNewCart(customerId: $customerId) {
+      cart_id
+      items {
+        item_id
+      }
+    }
   }
 `
 
@@ -142,5 +153,6 @@ export {
   REMOVE_CART_ITEM,
   ADD_CUSTOMER_ADDRESS,
   CREATE_ORDER,
-  SET_SHIPPING_TYPE
+  SET_SHIPPING_TYPE,
+  GET_NEW_CART
 }

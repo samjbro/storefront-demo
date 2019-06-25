@@ -15,7 +15,8 @@ type Mutation {
   updateCart(data: UpdateCartInput!): CartItem!
   removeCartItem(item_id: Int!): Boolean
   addCustomerAddress(data: AddAddressInput!): Customer!
-  createOrder(data: CreateOrderInput!): [CartItem!]!
+  createOrder(data: CreateOrderInput!): OrderConfirmation!
+  getNewCart(customerId: String): Cart!
 }
 
 type Customer {
@@ -123,6 +124,10 @@ type AuthPayload {
 type ProductsPayload {
   count: String!
   product_list: [Product!]!
+}
+
+type OrderConfirmation {
+  id: String!
 }
 
 input LoginCustomerInput {
