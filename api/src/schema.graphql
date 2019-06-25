@@ -8,14 +8,14 @@ type Query {
 }
 
 type Mutation {
-  login (data: LoginCustomerInput!): AuthPayload!
-  register (data: RegisterCustomerInput!): AuthPayload!
-  addReview (data: AddReviewInput!): Review
-  addToCart (data: AddToCartInput!): CartItem!
-  updateCart (data: UpdateCartInput!): CartItem!
-  removeCartItem (item_id: Int!): Boolean
-  addCustomerAddress (data: AddAddressInput!): Customer!
-  createOrder (data: CreateOrderInput!): [CartItem!]!
+  login(data: LoginCustomerInput!): AuthPayload!
+  register(data: RegisterCustomerInput!): AuthPayload!
+  addReview(data: AddReviewInput!): Review
+  addToCart(data: AddToCartInput!): CartItem!
+  updateCart(data: UpdateCartInput!): CartItem!
+  removeCartItem(item_id: Int!): Boolean
+  addCustomerAddress(data: AddAddressInput!): Customer!
+  createOrder(data: CreateOrderInput!): [CartItem!]!
 }
 
 type Customer {
@@ -42,6 +42,12 @@ type Product {
   image_2: String!
   attributes: [Attribute!]!
   reviews: [Review!]!
+  locations: ProductLocations!
+}
+
+type ProductLocations {
+  department: Department!
+  category: Category!
 }
 
 type Attribute {
@@ -60,13 +66,14 @@ type Review {
 type Department {
   department_id: ID!
   name: String!
-  description: String!
+  description: String
+  categories: [Category!]!
 }
 
 type Category {
   category_id: ID!
   name: String!
-  description: String!
+  description: String
 }
 
 type Cart {
@@ -92,7 +99,7 @@ type Address {
 }
 
 type ShippingRegion {
-  shipping_region_id: Int!,
+  shipping_region_id: Int!
   shipping_region: String!
   shipping_types: [ShippingType!]!
 }
