@@ -53,6 +53,7 @@
   "scripts": {
     "dev": "env-cmd ./config/dev.env nodemon dev-server.js --exec babel-node --ignore src/*",
     "build": "env-cmd ./config/prod.env webpack --config build/webpack.prod.config.js",
+    "test": "jest -c jest.config.js",
     "test:watch": "jest -c jest.config.js --watchAll"
   }
 }

@@ -21,5 +21,4 @@ module.exports = {
     "<rootDir>/node_modules/jest-serializer-vue"
   ],
   "setupFilesAfterEnv": ["<rootDir>/src/jest-setup.js"]
-
 }
