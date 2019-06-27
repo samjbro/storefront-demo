@@ -24,7 +24,7 @@
     "@babel/preset-env": "7.3.4"
   },
   "scripts": {
-    "dev": "env-cmd ./config/dev.env nodemon src/index.js --exec babel-node",
+    "dev": "npm run deploy:prod && env-cmd ./config/dev.env nodemon src/index.js --exec babel-node",
     "start": "npm run deploy:prod && npm run build && env-cmd ./config/prod.env node dist/index.js",
     "build": "babel src -d dist",
     "deploy:dev": "prisma deploy -e ./config/dev.env && npm run get-schema",
