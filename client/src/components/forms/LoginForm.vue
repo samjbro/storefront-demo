@@ -12,7 +12,10 @@
       </div>
     </template>
     <template v-slot:submit>
-      <span>Sign In</span>
+      <span v-if="loading">
+        <fa-icon :icon="['fas', 'spinner']" spin/>
+      </span>
+      <span v-else>Sign In</span>
     </template>
     <template v-slot:links>
       <a class="login-form__link" @click="showOverlay('register')">Don't have an account?</a>
@@ -21,21 +24,28 @@
 </template>
 
 <script>
-import { LOG_IN, SET_CURRENT_CUSTOMER, CLOSE_OVERLAY, SHOW_OVERLAY } from '@/apollo/operations'
-import FormTemplate from './FormTemplate'
+import {
+  LOG_IN,
+  SET_CURRENT_CUSTOMER,
+  CLOSE_OVERLAY,
+  SHOW_OVERLAY
+} from "@/apollo/operations";
+import FormTemplate from "./FormTemplate";
 export default {
   components: { FormTemplate },
-  data () {
+  data() {
     return {
-      email: 'testuser@email.com',
-      password: '123123',
+      email: "testuser@email.com",
+      password: "123123",
       // email: '',
       // password: '',
-      remember: false
-    }
+      remember: false,
+      loading: false
+    };
   },
   methods: {
-    async login () {
+    async login() {
+      this.loading = true;
       try {
         const { data } = await this.$apollo.mutate({
           mutation: LOG_IN,
@@ -45,34 +55,37 @@ export default {
               password: this.password
             }
           }
-        })
-        this.remember && localStorage.setItem('token', data.login.token)
-        localStorage.setItem('token', data.login.token)
-        if (this.remember) localStorage.setItem('rememberMe', true)
+        });
+        this.remember && localStorage.setItem("token", data.login.token);
+        localStorage.setItem("token", data.login.token);
+        if (this.remember) localStorage.setItem("rememberMe", true);
         await this.$apollo.mutate({
           mutation: SET_CURRENT_CUSTOMER,
           variables: {
             customer: data.login.customer
           }
-        })
+        });
+
         this.$apollo.mutate({
           mutation: CLOSE_OVERLAY
-        })
+        });
+        this.loading = false;
       } catch (e) {
-        this.$refs.form.fail(e.message.replace('GraphQL error: ', ''))
-        console.error(e)
+        this.loading = false;
+        this.$refs.form.fail(e.message.replace("GraphQL error: ", ""));
+        console.error(e);
       }
     },
-    showOverlay (view) {
+    showOverlay(view) {
       this.$apollo.mutate({
         mutation: SHOW_OVERLAY,
         variables: {
           view
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -82,12 +95,12 @@ export default {
   flex-direction: column;
 
   &__remember {
-    color: #B4B4B4;
+    color: #b4b4b4;
     font-size: 1.2rem;
     font-weight: 600;
     margin: 0 auto;
     input {
-      margin-right: .4rem;
+      margin-right: 0.4rem;
     }
   }
 }
