@@ -31,7 +31,7 @@ export default {
   components: { FormTemplate },
   data() {
     return {
-      name,
+      name: "",
       email: "",
       password: "",
       passwordConfirmation: "",
@@ -42,6 +42,7 @@ export default {
     async register() {
       this.loading = true;
       try {
+        if (!this.name || !this.email || !this.password) return;
         if (this.password !== this.passwordConfirmation) {
           return this.$refs.form.fail("Passwords do not match");
         }
