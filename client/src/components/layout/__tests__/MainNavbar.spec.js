@@ -47,7 +47,22 @@ describe('MainNavbar', () => {
       }
     })
   })
-  it('can request a department by id', () => {})
+  it('can request a department by id', () => {
+    const mutate = jest.fn()
+    const wrapper = renderComponent({
+      mutate,
+    })
+    const departmentId = '999'
+    wrapper.vm.showDepartment(departmentId)
+    expect(mutate).toHaveBeenCalledWith({
+      mutation: SET_SEARCH_TERMS,
+      variables: {
+        data: expect.objectContaining({
+          department_id: parseInt(departmentId)
+        })
+      }
+    })
+  })
 })
 
 const renderComponent = ({
