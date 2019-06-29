@@ -4,8 +4,11 @@ import {
 } from '@vue/test-utils'
 
 import ProductView from '../ProductView'
+import {
+  GET_PRODUCT
+} from '@/apollo/operations';
 
-describe('ProductView.vue', () => {
+describe('ProductView', () => {
   const spies = {}
   beforeEach(() => {
     jest.resetModules()
@@ -34,21 +37,34 @@ describe('ProductView.vue', () => {
     expect(wrapper.vm.getNextProductId(1)).toBe('3')
     expect(wrapper.vm.getNextProductId(-1)).toBe('1')
   })
-  it('can get a new product ', async () => {
-    const mutate = jest.fn(() => ({
-      data: {
-        product: {}
+  it('can request a new product by id', async () => {
+    const productId = 999
+    const query = jest.fn(() => ({
+      data: {}
+    }))
+    const wrapper = renderComponent({
+      query
+    })
+    await wrapper.vm.getProduct(productId)
+    expect(query).toHaveBeenCalledWith(expect.objectContaining({
+      query: GET_PRODUCT,
+      variables: {
+        id: productId
       }
     }))
-    const wrapper = mount(ProductView, {
-      mocks: {
-        $apollo: {
-          mutate
-        }
-      }
-    })
-
   })
   it('filters out reviews with a rating of below 0 and above 5', () => {})
   it('calculates an average rating from review scores', () => {})
 })
+
+const renderComponent = ({
+  query
+}) => {
+  return mount(ProductView, {
+    mocks: {
+      $apollo: {
+        query
+      }
+    }
+  })
+}
