@@ -24,7 +24,19 @@ describe('ProductFilters.vue', () => {
       }
     })
   })
-  it('resets the page to one when search terms are updated', () => {})
+  it('sets the page to one when search terms are updated', () => {
+    const mutate = jest.fn()
+    const wrapper = renderComponent(mutate)
+    wrapper.vm.filter()
+    expect(mutate).toHaveBeenCalledWith({
+      mutation: SET_SEARCH_TERMS,
+      variables: {
+        data: expect.objectContaining({
+          page: 1
+        })
+      }
+    })
+  })
 })
 
 const renderComponent = (mutate = () => {}) => {
