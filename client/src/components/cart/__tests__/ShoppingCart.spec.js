@@ -3,6 +3,9 @@ import {
 } from '@vue/test-utils'
 
 import ShoppingCart from '../ShoppingCart'
+import {
+  UPDATE_CART
+} from '../../../apollo/operations/mutations';
 
 describe('ShoppingCart', () => {
   it('can calculate the total price of the cart', () => {
@@ -30,7 +33,50 @@ describe('ShoppingCart', () => {
     })
     expect(wrapper.vm.totalPrice).toBe('199.50')
   })
-  it('can request that the cart be updated', () => {})
+  it('can request that an item quantity be incremented', () => {
+    const mutate = jest.fn(() => ({
+      data: {
+        updateCart: {}
+      }
+    }))
+    const wrapper = renderComponent({
+      mutate
+    })
+    const item = {
+      item_id: 1,
+      quantity: 1,
+      product: {}
+    }
+    const direction = 1
+    wrapper.vm.increment(direction, item)
+    expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+      mutation: UPDATE_CART,
+      variables: {
+        data: {
+          item_id: item.item_id,
+          quantity: item.quantity + direction
+        }
+      }
+    }))
+  })
+  it('will not increment item quantity below 1', () => {
+    const mutate = jest.fn(() => ({
+      data: {
+        updateCart: {}
+      }
+    }))
+    const wrapper = renderComponent({
+      mutate
+    })
+    const item = {
+      item_id: 1,
+      quantity: 1,
+      product: {}
+    }
+    const direction = -1
+    wrapper.vm.increment(direction, item)
+    expect(mutate).not.toHaveBeenCalled()
+  })
   it('can request that an item be removed from the cart', () => {})
 })
 
@@ -39,7 +85,14 @@ const renderComponent = ({
   mutate
 }) => {
   return mount(ShoppingCart, {
-    data: () => (data),
+    data: () => ({
+      currentCustomer: {
+        cart: {
+          items: []
+        }
+      },
+      ...data
+    }),
     mocks: {
       $apollo: {
         mutate
