@@ -3,10 +3,16 @@
     <div class="product-view__loading" v-if="isLoading || !currentProduct">
       <fa-icon :icon="['fas', 'spinner']" spin/>
     </div>
-    <div class="product-view__arrow product-view__arrow--left" @click="getProduct(-1)">
+    <div
+      class="product-view__arrow product-view__arrow--left"
+      @click="getProduct(getNextProductId(-1))"
+    >
       <fa-icon :icon="['fas', 'angle-left']"/>
     </div>
-    <div class="product-view__arrow product-view__arrow--right" @click="getProduct(1)">
+    <div
+      class="product-view__arrow product-view__arrow--right"
+      @click="getProduct(getNextProductId(1))"
+    >
       <fa-icon :icon="['fas', 'angle-right']"/>
     </div>
     <template v-if="currentProduct">
@@ -119,16 +125,17 @@ export default {
       if (this.currentProduct.loading) return this.currentProduct.price;
       return "£" + price;
     },
-    async getProduct(direction) {
+    getNextProductId(direction) {
+      return (parseInt(this.currentProduct.product_id) + direction).toString();
+    },
+    async getProduct(id) {
       this.isLoading = true;
       this.showReviews = false;
       try {
         const { data } = await this.$apollo.query({
           query: GET_PRODUCT,
           variables: {
-            id: (
-              parseInt(this.currentProduct.product_id) + direction
-            ).toString()
+            id
           }
         });
         if (!data.product) return;
