@@ -4,7 +4,8 @@ import {
 
 import ShoppingCart from '../ShoppingCart'
 import {
-  UPDATE_CART
+  UPDATE_CART,
+  REMOVE_CART_ITEM
 } from '../../../apollo/operations/mutations';
 
 describe('ShoppingCart', () => {
@@ -60,11 +61,7 @@ describe('ShoppingCart', () => {
     }))
   })
   it('will not increment item quantity below 1', () => {
-    const mutate = jest.fn(() => ({
-      data: {
-        updateCart: {}
-      }
-    }))
+    const mutate = jest.fn()
     const wrapper = renderComponent({
       mutate
     })
@@ -77,7 +74,22 @@ describe('ShoppingCart', () => {
     wrapper.vm.increment(direction, item)
     expect(mutate).not.toHaveBeenCalled()
   })
-  it('can request that an item be removed from the cart', () => {})
+  it('can request that an item be removed from the cart', () => {
+    const mutate = jest.fn()
+    const wrapper = renderComponent({
+      mutate
+    })
+    const item = {
+      item_id: 999
+    }
+    wrapper.vm.remove(item)
+    expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+      mutation: REMOVE_CART_ITEM,
+      variables: {
+        item_id: item.item_id
+      }
+    }))
+  })
 })
 
 const renderComponent = ({
