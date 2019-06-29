@@ -98,7 +98,25 @@ describe('ProductView', () => {
     expect(wrapper.vm.validReviews.length).toBe(1)
     expect(wrapper.vm.validReviews[0]).toBe(reviewB)
   })
-  it('calculates an average rating from review scores', () => {})
+  it('calculates an average rating from review scores', () => {
+    const reviewA = {
+      rating: 1
+    }
+    const reviewB = {
+      rating: 3
+    }
+    const reviewC = {
+      rating: 5
+    }
+    const wrapper = renderComponent({
+      data: {
+        currentProduct: {
+          reviews: [reviewA, reviewB, reviewC]
+        }
+      }
+    })
+    expect(wrapper.vm.averageRating).toEqual(3)
+  })
 })
 
 const renderComponent = ({
