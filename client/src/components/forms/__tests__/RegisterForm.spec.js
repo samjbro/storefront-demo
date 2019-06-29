@@ -4,10 +4,27 @@ import {
 
 import RegisterForm from '../RegisterForm'
 import {
-  REGISTER
+  REGISTER,
+  SET_CURRENT_CUSTOMER
 } from '@/apollo/operations'
 
 describe('RegisterForm.vue', () => {
+  let registerData
+  const spies = {}
+  beforeEach(() => {
+    spies.localStorageSetItem = jest.spyOn(Storage.prototype, 'setItem')
+    registerData = {
+      name: 'some-name',
+      email: 'some@email.com',
+      password: 'somepassword123',
+      passwordConfirmation: 'somepassword123'
+    }
+  })
+  afterEach(() => {
+    Object.keys(spies).forEach(spy => {
+      spies[spy].mockRestore()
+    })
+  })
   it('will not attempt to register without all the necessary data', async () => {
     const mutate = mockMutate()
     const wrapper = renderComponent(mutate)
@@ -17,56 +34,37 @@ describe('RegisterForm.vue', () => {
     }))
   })
   it('will not attempt register if password and confirmation do not match', async () => {
-    const password = 'password123'
-    const otherPassword = 'does-not-match'
+    registerData.passwordConfirmation = 'does-not-match'
     const mutate = mockMutate()
     const wrapper = renderComponent(mutate)
-    wrapper.setData({
-      password,
-      passwordConfirmation: otherPassword
-    })
+    wrapper.setData(registerData)
     await wrapper.vm.register()
     expect(mutate).not.toBeCalledWith(expect.objectContaining({
       mutation: REGISTER
     }))
   })
   it('will attempt register if passwords match', async () => {
-    const name = 'some-name'
-    const email = 'some-email'
-    const password = 'password123'
     const mutate = mockMutate({
       data: {
-        register: {
-          token: '123',
-          customer: {}
-        }
+        register: {}
       }
     })
     const wrapper = renderComponent(mutate)
-    wrapper.setData({
-      name,
-      email,
-      password,
-      passwordConfirmation: password
-    })
+    wrapper.setData(registerData)
     await wrapper.vm.register()
     expect(mutate).toBeCalledWith(expect.objectContaining({
       mutation: REGISTER,
       variables: {
         data: {
-          name,
-          email,
-          password
+          name: registerData.name,
+          email: registerData.email,
+          password: registerData.password
         }
       }
     }))
   })
 
   it('sets the login token in local storage', async () => {
-    const name = 'some-name'
-    const email = 'some@email.com'
-    const password = 'password123'
-    const spy = jest.spyOn(Storage.prototype, 'setItem')
     const token = 'sometoken123'
     const mutate = mockMutate({
       data: {
@@ -76,17 +74,33 @@ describe('RegisterForm.vue', () => {
       }
     })
     const wrapper = renderComponent(mutate)
-    wrapper.setData({
-      name,
-      email,
-      password,
-      passwordConfirmation: password
-    })
+    wrapper.setData(registerData)
     await wrapper.vm.register()
-    expect(spy).toHaveBeenCalledWith('token', token)
-    spy.mockRestore()
+    expect(spies.localStorageSetItem).toHaveBeenCalledWith('token', token)
+  })
+  it('sets current customer after successful register', async () => {
+    const customer = {
+      name: 'some-customer'
+    }
+    const mutate = mockMutate({
+      data: {
+        register: {
+          customer
+        }
+      }
+    })
+    const wrapper = renderComponent(mutate)
+    wrapper.setData(registerData)
+    await wrapper.vm.register()
+    expect(mutate).toHaveBeenNthCalledWith(2, expect.objectContaining({
+      mutation: SET_CURRENT_CUSTOMER,
+      variables: {
+        customer
+      }
+    }))
   })
 })
+
 const renderComponent = (mutate) =>
   mount(RegisterForm, {
     mocks: {
