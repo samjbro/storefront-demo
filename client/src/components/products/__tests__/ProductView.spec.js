@@ -78,15 +78,38 @@ describe('ProductView', () => {
       }
     }))
   })
-  it('filters out reviews with a rating of below 0 and above 5', () => {})
+  it('filters out reviews with a rating of below 0 and above 5', () => {
+    const reviewA = {
+      rating: -1
+    }
+    const reviewB = {
+      rating: 3
+    }
+    const reviewC = {
+      rating: 6
+    }
+    const wrapper = renderComponent({
+      data: {
+        currentProduct: {
+          reviews: [reviewA, reviewB, reviewC]
+        }
+      }
+    })
+    expect(wrapper.vm.validReviews.length).toBe(1)
+    expect(wrapper.vm.validReviews[0]).toBe(reviewB)
+  })
   it('calculates an average rating from review scores', () => {})
 })
 
 const renderComponent = ({
+  data = {},
   query = () => {},
   mutate = () => {}
 }) => {
-  return mount(ProductView, {
+  const wrapper = shallowMount(ProductView, {
+    data: () => ({
+      ...data
+    }),
     mocks: {
       $apollo: {
         query,
@@ -94,4 +117,5 @@ const renderComponent = ({
       }
     }
   })
+  return wrapper
 }
