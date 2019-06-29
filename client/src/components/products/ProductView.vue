@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     getImgUrl(img) {
-      return `https://backendapi.turing.com/images/products/${img}`;
+      return process.env.PRODUCT_IMAGE_URL + "/" + img;
     },
     toggleReviews() {
       this.showReviews = !this.showReviews;
