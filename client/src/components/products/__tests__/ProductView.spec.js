@@ -7,6 +7,9 @@ import ProductView from '../ProductView'
 import {
   GET_PRODUCT
 } from '@/apollo/operations';
+import {
+  SET_CURRENT_PRODUCT
+} from '../../../apollo/operations/mutations';
 
 describe('ProductView', () => {
   const spies = {}
@@ -53,17 +56,41 @@ describe('ProductView', () => {
       }
     }))
   })
+  it('sets the new product as the current product', async () => {
+    const product = {
+      id: 999
+    }
+    const query = jest.fn(() => ({
+      data: {
+        product
+      }
+    }))
+    const mutate = jest.fn()
+    const wrapper = renderComponent({
+      query,
+      mutate
+    })
+    await wrapper.vm.getProduct(999)
+    expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+      mutation: SET_CURRENT_PRODUCT,
+      variables: {
+        product
+      }
+    }))
+  })
   it('filters out reviews with a rating of below 0 and above 5', () => {})
   it('calculates an average rating from review scores', () => {})
 })
 
 const renderComponent = ({
-  query
+  query = () => {},
+  mutate = () => {}
 }) => {
   return mount(ProductView, {
     mocks: {
       $apollo: {
-        query
+        query,
+        mutate
       }
     }
   })
