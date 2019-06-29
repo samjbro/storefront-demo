@@ -27,7 +27,26 @@ describe('MainNavbar', () => {
       }
     })
   })
-  it('can clear the search', () => {})
+  it('can clear the search', () => {
+    const search = 'string-to-be-cleared'
+    const clearedSearch = ''
+    const mutate = jest.fn()
+    const wrapper = renderComponent({
+      mutate,
+      data: {
+        search
+      }
+    })
+    wrapper.vm.clear()
+    expect(mutate).toHaveBeenCalledWith({
+      mutation: SET_SEARCH_TERMS,
+      variables: {
+        data: expect.objectContaining({
+          query_string: clearedSearch
+        })
+      }
+    })
+  })
   it('can request a department by id', () => {})
 })
 
