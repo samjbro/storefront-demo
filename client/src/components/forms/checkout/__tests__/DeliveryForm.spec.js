@@ -47,7 +47,14 @@ describe('DeliveryForm', () => {
       }
     }))
   })
-  it('will not attempt to add customer address if input data is incomplete', () => {})
+  it('will not attempt to add customer address if input data is incomplete', () => {
+    const mutate = jest.fn()
+    const wrapper = renderComponent({
+      mutate,
+    })
+    wrapper.vm.submit()
+    expect(mutate).not.toHaveBeenCalled()
+  })
 })
 
 const renderComponent = ({

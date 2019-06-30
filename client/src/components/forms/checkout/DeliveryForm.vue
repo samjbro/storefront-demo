@@ -156,7 +156,6 @@ export default {
         this.settingAddress--;
         this.$emit("submit");
       } catch (e) {
-        console.log(e);
         this.settingAddress--;
         this.error = e;
         setTimeout(() => {
