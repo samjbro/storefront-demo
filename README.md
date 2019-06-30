@@ -19,10 +19,16 @@ git clone https://github.com/samjbro/turing-test.git
 
 cd turing-test
 
-docker-compose up --build
+docker-compose up
 ```
 
-You should now be able to access the application on http://localhost:8080, and any updates you make to the client codebase will be reflected in the running instance using HMR.
+The first time `docker-compose up` is run it will take some time - please be patient! Once all the services are running, run the following command in a separate terminal, from within the project's root directory.
+
+```
+docker-compose exec api npm run setup
+```
+
+You should now be able to access the application on http://localhost:8080, and any updates you make to the client codebase will be reflected in the running instance using HMR. Login using the hard-coded test user credentials, or register as a new user.
 
 If you update `datamodel.prisma` for any reason (if you want to modify the supplementary database) then you must run the following command after modification:
 

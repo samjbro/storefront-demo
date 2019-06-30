@@ -49,6 +49,7 @@ export default {
         customer
       }
     } catch (err) {
+      console.log(err.message)
       throw new Error(errorMessage)
     }
   },
