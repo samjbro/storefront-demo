@@ -63,7 +63,7 @@ export default {
       this.submitSearch();
     },
     async submitSearch() {
-      const { data } = await this.$apollo.mutate({
+      this.$apollo.mutate({
         mutation: SET_SEARCH_TERMS,
         variables: {
           data: {
@@ -71,9 +71,6 @@ export default {
             category_id: 0,
             query_string: this.search
           }
-        },
-        update: (cache, data) => {
-          console.log({ data });
         }
       });
     },

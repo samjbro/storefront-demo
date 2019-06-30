@@ -8,7 +8,10 @@
       <input type="password" v-model="passwordConfirmation" placeholder="Re-type password" required>
     </template>
     <template v-slot:submit>
-      <span>Sign Up</span>
+      <span v-if="loading">
+        <fa-icon :icon="['fas', 'spinner']" spin/>
+      </span>
+      <span v-else>Sign Up</span>
     </template>
     <template v-slot:links>
       <a class="login-form__link" @click="showOverlay('login')">Already have an account?</a>
@@ -17,23 +20,31 @@
 </template>
 
 <script>
-import { REGISTER, SET_CURRENT_CUSTOMER, CLOSE_OVERLAY, SHOW_OVERLAY } from '@/apollo/operations'
-import FormTemplate from './FormTemplate'
+import {
+  REGISTER,
+  SET_CURRENT_CUSTOMER,
+  CLOSE_OVERLAY,
+  SHOW_OVERLAY
+} from "@/apollo/operations";
+import FormTemplate from "./FormTemplate";
 export default {
   components: { FormTemplate },
-  data () {
+  data() {
     return {
-      name,
-      email: '',
-      password: '',
-      passwordConfirmation: ''
-    }
+      name: "",
+      email: "",
+      password: "",
+      passwordConfirmation: "",
+      loading: false
+    };
   },
   methods: {
-    async register () {
+    async register() {
+      this.loading = true;
       try {
+        if (!this.name || !this.email || !this.password) return;
         if (this.password !== this.passwordConfirmation) {
-          return this.$refs.form.fail('Passwords do not match')
+          return this.$refs.form.fail("Passwords do not match");
         }
         const { data } = await this.$apollo.mutate({
           mutation: REGISTER,
@@ -44,30 +55,32 @@ export default {
               password: this.password
             }
           }
-        })
-        localStorage.setItem('token', data.register.token)
+        });
+        localStorage.setItem("token", data.register.token);
         await this.$apollo.mutate({
           mutation: SET_CURRENT_CUSTOMER,
           variables: {
             customer: data.register.customer
           }
-        })
+        });
         this.$apollo.mutate({
           mutation: CLOSE_OVERLAY
-        })
+        });
+        this.loading = false;
       } catch (e) {
-        this.$refs.form.fail(e.message.replace('GraphQL error: ', ''))
-        console.error(e)
+        this.loading = false;
+        this.$refs.form.fail(e.message.replace("GraphQL error: ", ""));
+        console.error(e);
       }
     },
-    showOverlay (view) {
+    showOverlay(view) {
       this.$apollo.mutate({
         mutation: SHOW_OVERLAY,
         variables: {
           view
         }
-      })
+      });
     }
   }
-}
+};
 </script>

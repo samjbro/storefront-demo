@@ -63,9 +63,6 @@ export default {
     }
   },
   computed: {
-    // productList() {
-    //   return this.productsLoading ? this.defaultList : this.filteredProducts;
-    // },
     defaultList() {
       const list = [];
       for (let i = 0; i < this.searchTerms.limit; i++) {
